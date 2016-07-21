@@ -1,0 +1,30 @@
+{
+    "name": "slam/php-sql-legacy",
+    "type": "library",
+    "description": "Crappy SQL related classes",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Filippo Tessarotto",
+            "email": "zoeslam@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Db_": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SlamTest\\Db\\": "tests/"
+        }
+    },
+    "require" : {
+        "php" :             "^5.6 || ^7.0",
+        "ext-mysqli":       "*",
+        "ext-pdo":          "*",
+        "ext-pdo_mysql":    "*",
+        "ext-pdo_sqlite":   "*"
+    }
+}
