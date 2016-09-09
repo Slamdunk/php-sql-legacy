@@ -31,6 +31,9 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
             );
         }
 
+var_dump(getenv('TRAVIS'));
+var_dump($parameters);
+var_dump($_SERVER);
         foreach ($parameters as $key => $value) {
             Db_Mysqli::${$key} = $value;
         }
