@@ -1,5 +1,5 @@
 <?php
 
-final class Db_Exception extends PDOException
+final class Db_Exception extends Exception
 {
 }
