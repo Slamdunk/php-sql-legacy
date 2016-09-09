@@ -101,12 +101,12 @@ final class Db_Mysqli
         try {
             $this->mysqli_result = self::$mysqli->query($query);
         } catch (mysqli_sql_exception $mysqliException) {
-            $message = sprintf("The following error:\n%s\nwas raised during the execution of the query:\n%s",
+            $message = sprintf("%s\n\n%s",
                 $mysqliException->getMessage(),
                 $query
             );
 
-            throw new Db_Exception($query, self::$mysqli->errno, $mysqliException);
+            throw new Db_Exception($message, self::$mysqli->errno, $mysqliException);
         }
 
         if ($this->enableProfiling) {
