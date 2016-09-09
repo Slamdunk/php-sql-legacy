@@ -19,7 +19,7 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
             'Connection_Charset'     => 'latin1',
         );
 
-        if (getenv('TRAVIS') === true) {
+        if (getenv('TRAVIS') !== false) {
             $parameters = array(
                 'Host'                   => '127.0.0.1',
                 'Port'                   => 3306,
@@ -31,9 +31,6 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
             );
         }
 
-var_dump(getenv('TRAVIS'));
-var_dump($parameters);
-var_dump($_SERVER);
         foreach ($parameters as $key => $value) {
             Db_Mysqli::${$key} = $value;
         }
