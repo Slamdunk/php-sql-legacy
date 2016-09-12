@@ -31,6 +31,7 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
             );
         }
 
+        Db_Mysqli::resetInstance();
         foreach ($parameters as $key => $value) {
             Db_Mysqli::${$key} = $value;
         }
@@ -40,13 +41,14 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
 
     public function testRaiseExceptionWithWrongCredentials()
     {
-        $this->db->resetInstance();
-
+        Db_Mysqli::resetInstance();
         Db_Mysqli::$Password = uniqid('wrong_password_');
+
+        $db = new Db_Mysqli();
 
         $this->setExpectedException('mysqli_sql_exception');
 
-        new Db_Mysqli();
+        $db->getConnection();
     }
 
     public function testHasAMysqliConnection()
@@ -79,9 +81,9 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
 
     public function testNormalQueryBehaviours()
     {
-        $this->assertFalse($this->db->enableProfiling);
+        $this->assertFalse(Db_Mysqli::$enableProfiling);
 
-        $this->db->enableProfiling = true;
+        Db_Mysqli::$enableProfiling = true;
 
         $this->db->query('
             CREATE TEMPORARY TABLE query_test (
@@ -140,6 +142,8 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
         $this->db->next_record();
 
         $this->assertSame('"', $this->db->Record['name']);
+
+        Db_Mysqli::$enableProfiling = false;
     }
 
     public function testCannotExecuteUnpreparedStatements()

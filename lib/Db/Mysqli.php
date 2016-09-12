@@ -10,7 +10,7 @@ final class Db_Mysqli
     public static $Password;
     public static $Connection_Charset;
 
-    public $enableProfiling;
+    public static $enableProfiling = false;
 
     public $Record = array();
 
@@ -20,12 +20,10 @@ final class Db_Mysqli
     private static $mysqli  = null;
     private $mysqli_result  = null;
 
-    private $Statement;
+    private $statement;
 
-    public function __construct()
+    private function connect()
     {
-        $this->enableProfiling = defined('DEBUG') and DEBUG and PHP_SAPI !== 'cli';
-
         if (self::$mysqli !== null) {
             return;
         }
@@ -46,29 +44,41 @@ final class Db_Mysqli
         self::$mysqli->real_query('SET SQL_BIG_SELECTS = 1');
     }
 
-    public function resetInstance()
+    public static function resetInstance()
     {
+        if (self::$mysqli === null) {
+            return;
+        }
+
         self::$mysqli->close();
         self::$mysqli = null;
     }
 
     public function getConnection()
     {
+        $this->connect();
+
         return self::$mysqli;
     }
 
     public function escape($string)
     {
+        $this->connect();
+
         return self::$mysqli->real_escape_string($string);
     }
 
     public function query_id()
     {
+        $this->connect();
+
         return $this->mysqli_result;
     }
 
     public function free()
     {
+        $this->connect();
+
         if ($this->mysqli_result instanceof mysqli_result) {
             $this->mysqli_result->free();
         }
@@ -80,11 +90,13 @@ final class Db_Mysqli
 
     public function query($query)
     {
+        $this->connect();
+
         if ($this->mysqli_result) {
             $this->free();
         }
 
-        if ($this->enableProfiling) {
+        if (self::$enableProfiling) {
             if (! isset($GLOBALS['queries'])) {
                 $GLOBALS['queries'] = array();
             }
@@ -109,7 +121,7 @@ final class Db_Mysqli
             throw new Db_Exception($message, self::$mysqli->errno, $mysqliException);
         }
 
-        if ($this->enableProfiling) {
+        if (self::$enableProfiling) {
             $GLOBALS['queries'][$key]['time'] = (microtime(true) - $query_start);
         }
 
@@ -121,18 +133,22 @@ final class Db_Mysqli
 
     public function prepare($query)
     {
+        $this->connect();
+
         if (empty($query)) {
             return false;
         }
 
-        $this->Statement = uniqid('stmt_');
+        $this->statement = uniqid('stmt_');
 
-        return $this->query(sprintf('PREPARE %s FROM \'%s\'', $this->Statement, $query));
+        return $this->query(sprintf('PREPARE %s FROM \'%s\'', $this->statement, $query));
     }
 
     public function execute(array $params)
     {
-        if ($this->Statement === null) {
+        $this->connect();
+
+        if ($this->statement === null) {
             throw new Db_Exception('No query prepared for execute()');
         }
 
@@ -143,15 +159,17 @@ final class Db_Mysqli
             $using[] = '@param_' . $index;
         }
 
-        $this->mysqli_result = $this->query('EXECUTE ' . $this->Statement . ' USING ' . implode(',', $using));
+        $this->mysqli_result = $this->query('EXECUTE ' . $this->statement . ' USING ' . implode(',', $using));
 
-        $this->Statement = null;
+        $this->statement = null;
 
         return $this->mysqli_result;
     }
 
     public function next_record()
     {
+        $this->connect();
+
         if ($this->mysqli_result === null) {
             throw new Db_Exception('No query active for next_record()');
         }
@@ -172,21 +190,29 @@ final class Db_Mysqli
 
     public function affected_rows()
     {
+        $this->connect();
+
         return self::$mysqli->affected_rows;
     }
 
     public function num_rows()
     {
+        $this->connect();
+
         return $this->mysqli_result->num_rows;
     }
 
     public function f($Name)
     {
+        $this->connect();
+
         return $this->Record[$Name];
     }
 
     public function metadata($table)
     {
+        $this->connect();
+
         $id = $this->query('SELECT * FROM ' . $table . ' WHERE FALSE');
 
         $result = array();
@@ -208,6 +234,8 @@ final class Db_Mysqli
 
     public function last_insert_id()
     {
+        $this->connect();
+
         return self::$mysqli->insert_id;
     }
 }
