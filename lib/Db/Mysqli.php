@@ -159,11 +159,7 @@ final class Db_Mysqli
             $using[] = '@param_' . $index;
         }
 
-        $this->mysqli_result = $this->query('EXECUTE ' . $this->statement . ' USING ' . implode(',', $using));
-
-        $this->statement = null;
-
-        return $this->mysqli_result;
+        return $this->query('EXECUTE ' . $this->statement . ' USING ' . implode(',', $using));
     }
 
     public function next_record()

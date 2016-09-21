@@ -135,6 +135,7 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
 
         $this->db->prepare('INSERT INTO query_test (id, name) VALUES (?, ?)');
         $stmt = $this->db->execute(array(5, '"'));
+        $stmt = $this->db->execute(array(6, '\''));
 
         $this->assertSame($stmt, $this->db->query_id());
 
@@ -142,6 +143,11 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
         $this->db->next_record();
 
         $this->assertSame('"', $this->db->Record['name']);
+
+        $this->db->query('SELECT name FROM query_test WHERE id = 6');
+        $this->db->next_record();
+
+        $this->assertSame('\'', $this->db->Record['name']);
 
         Db_Mysqli::$enableProfiling = false;
     }
