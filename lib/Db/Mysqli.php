@@ -121,6 +121,14 @@ final class Db_Mysqli
             throw new Db_Exception($message, self::$mysqli->errno, $mysqliException);
         }
 
+        // The "$driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;"
+        // should ensure that a "mysqli_sql_exception" is always raised in case of failure
+        // but the documentation is not clear about if it occurs on EVERY failure.
+        // As of yet no test covers this because I never found a false returned without exception
+        if ($this->mysqli_result === false) {
+            throw new Db_Exception(sprintf("The following query returned false:\n\n%s", $query));
+        }
+
         if (self::$enableProfiling) {
             $GLOBALS['queries'][$key]['time'] = (microtime(true) - $query_start);
         }
