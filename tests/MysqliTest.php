@@ -97,6 +97,8 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
 
         $this->assertArrayHasKey('queries', $GLOBALS);
 
+        Db_Mysqli::$enableProfiling = false;
+
         $this->assertTrue($result);
         $this->assertSame(2, $this->db->affected_rows());
         $this->assertSame(9, $this->db->last_insert_id());
@@ -130,33 +132,6 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
 
         $metadata = $this->db->metadata('query_test');
         $this->assertSame('id', $metadata[0]['name']);
-
-        $this->assertFalse($this->db->prepare(''));
-
-        $this->db->prepare('INSERT INTO query_test (id, name) VALUES (?, ?)');
-        $stmt = $this->db->execute(array(5, '"'));
-        $stmt = $this->db->execute(array(6, '\''));
-
-        $this->assertSame($stmt, $this->db->query_id());
-
-        $this->db->query('SELECT name FROM query_test WHERE id = 5');
-        $this->db->next_record();
-
-        $this->assertSame('"', $this->db->Record['name']);
-
-        $this->db->query('SELECT name FROM query_test WHERE id = 6');
-        $this->db->next_record();
-
-        $this->assertSame('\'', $this->db->Record['name']);
-
-        Db_Mysqli::$enableProfiling = false;
-    }
-
-    public function testCannotExecuteUnpreparedStatements()
-    {
-        $this->setExpectedException('Db_Exception');
-
-        $this->db->execute(array());
     }
 
     public function testCannotNextRecordWithoutQuery()

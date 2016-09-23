@@ -14,13 +14,8 @@ final class Db_Mysqli
 
     public $Record = array();
 
-    public $Errno;
-    public $Error;
-
     private static $mysqli  = null;
     private $mysqli_result  = null;
-
-    private $statement;
 
     private function connect()
     {
@@ -133,41 +128,7 @@ final class Db_Mysqli
             $GLOBALS['queries'][$key]['time'] = (microtime(true) - $query_start);
         }
 
-        $this->Errno = self::$mysqli->errno;
-        $this->Error = self::$mysqli->error;
-
         return $this->mysqli_result;
-    }
-
-    public function prepare($query)
-    {
-        $this->connect();
-
-        if (empty($query)) {
-            return false;
-        }
-
-        $this->statement = uniqid('stmt_');
-
-        return $this->query(sprintf('PREPARE %s FROM \'%s\'', $this->statement, $query));
-    }
-
-    public function execute(array $params)
-    {
-        $this->connect();
-
-        if ($this->statement === null) {
-            throw new Db_Exception('No query prepared for execute()');
-        }
-
-        $params = array_values($params);
-        $using = array();
-        foreach ($params as $index => $value) {
-            $result = $this->query('SET @param_' . $index . ' = "' . $this->escape($value) . '"');
-            $using[] = '@param_' . $index;
-        }
-
-        return $this->query('EXECUTE ' . $this->statement . ' USING ' . implode(',', $using));
     }
 
     public function next_record()
@@ -179,9 +140,6 @@ final class Db_Mysqli
         }
 
         $this->Record = $this->mysqli_result->fetch_assoc();
-
-        $this->Errno = self::$mysqli->errno;
-        $this->Error = self::$mysqli->error;
 
         $stat = is_array($this->Record);
 
