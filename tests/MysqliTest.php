@@ -59,11 +59,14 @@ final class MysqliTest extends TestCase
         $this->assertInstanceOf('mysqli', $this->db->getConnection());
     }
 
-    public function testEscapeString()
+    public function testEscape()
     {
         $string = '"';
 
         $this->assertNotSame($string, $this->db->escape($string));
+
+        $this->assertSame('1', $this->db->escape(1));
+        $this->assertSame('A', $this->db->escape('A'));
     }
 
     public function testRaiseExceptionOnAWrongQueryAndReportQuery()

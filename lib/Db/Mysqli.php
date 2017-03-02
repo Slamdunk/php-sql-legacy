@@ -51,18 +51,18 @@ final class Db_Mysqli
         self::$mysqli = null;
     }
 
-    public function getConnection()
+    public function getConnection(): mysqli
     {
         $this->connect();
 
         return self::$mysqli;
     }
 
-    public function escape($string)
+    public function escape($string): string
     {
         $this->connect();
 
-        return self::$mysqli->real_escape_string($string);
+        return self::$mysqli->real_escape_string((string) $string);
     }
 
     public function query_id()
@@ -72,7 +72,7 @@ final class Db_Mysqli
         return $this->mysqli_result;
     }
 
-    public function free()
+    public function free(): self
     {
         $this->connect();
 
@@ -85,7 +85,7 @@ final class Db_Mysqli
         return $this;
     }
 
-    public function query($query)
+    public function query(string $query)
     {
         $this->connect();
 
@@ -152,14 +152,14 @@ final class Db_Mysqli
         return $stat;
     }
 
-    public function affected_rows()
+    public function affected_rows(): int
     {
         $this->connect();
 
         return self::$mysqli->affected_rows;
     }
 
-    public function num_rows()
+    public function num_rows(): int
     {
         $this->connect();
 
@@ -173,7 +173,7 @@ final class Db_Mysqli
         return $this->Record[$Name];
     }
 
-    public function metadata($table)
+    public function metadata(string $table)
     {
         $this->connect();
 
