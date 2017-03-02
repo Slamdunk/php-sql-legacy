@@ -14,7 +14,7 @@ final class Db_ProfilerQuery
 
     private $boundParams = array();
 
-    public function __construct($query, $queryType)
+    public function __construct(string $query, int $queryType)
     {
         $this->query = $query;
         $this->queryType = $queryType;
@@ -40,17 +40,17 @@ final class Db_ProfilerQuery
         $this->endedMicrotime = microtime(true);
     }
 
-    public function hasEnded()
+    public function hasEnded(): bool
     {
         return $this->endedMicrotime !== null;
     }
 
-    public function getQuery()
+    public function getQuery(): string
     {
         return $this->query;
     }
 
-    public function getQueryType()
+    public function getQueryType(): int
     {
         return $this->queryType;
     }
@@ -71,7 +71,7 @@ final class Db_ProfilerQuery
         }
     }
 
-    public function getQueryParams()
+    public function getQueryParams(): array
     {
         return $this->boundParams;
     }

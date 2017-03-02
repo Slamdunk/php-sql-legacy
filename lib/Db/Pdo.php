@@ -47,7 +47,7 @@ final class Db_Pdo extends PDO
         return parent::__construct($dsn, $username, $password, $driver_options);
     }
 
-    public static function buildDsn(array $dsnCustom = array())
+    public static function buildDsn(array $dsnCustom = array()): string
     {
         $dsnDefault = array(
             'host'          => DB_SQL_HOST,
@@ -67,7 +67,7 @@ final class Db_Pdo extends PDO
         return $dsn;
     }
 
-    public static function getInstance()
+    public static function getInstance(): self
     {
         if (self::$currentSharedInstance === null) {
             throw new Db_Exception('Nessuna connessione globale attivata');
@@ -88,7 +88,7 @@ final class Db_Pdo extends PDO
         return self::$currentSharedInstance;
     }
 
-    public static function setInstance(Db_Pdo $instance)
+    public static function setInstance(Db_Pdo $instance): self
     {
         self::$currentSharedInstance = $instance;
 
@@ -102,12 +102,12 @@ final class Db_Pdo extends PDO
         self::$currentSharedInstance = null;
     }
 
-    public function getDbParams()
+    public function getDbParams(): array
     {
         return $this->dbParams;
     }
 
-    public function getProfiler()
+    public function getProfiler(): Db_Profiler
     {
         if ($this->profiler === null) {
             $this->profiler = new Db_Profiler();
@@ -125,7 +125,7 @@ final class Db_Pdo extends PDO
         return $int;
     }
 
-    public function query($statement, array $binds = array())
+    public function query(string $statement, array $binds = array())
     {
         // Needed for profiler
         $stmt = $this->prepare($statement);
@@ -134,7 +134,7 @@ final class Db_Pdo extends PDO
         return $stmt;
     }
 
-    public function insert($tableName, array $data)
+    public function insert(string $tableName, array $data): Db_PdoStatement
     {
         return $this->query('
             INSERT INTO ' . $tableName . ' (' . implode(', ', array_keys($data)) . ')
@@ -142,7 +142,7 @@ final class Db_Pdo extends PDO
         ', array_values($data));
     }
 
-    public function update($tableName, array $data, array $identifier)
+    public function update(string $tableName, array $data, array $identifier): Db_PdoStatement
     {
         $set = array();
         foreach ($data as $columnName => $value) {
@@ -158,7 +158,7 @@ final class Db_Pdo extends PDO
         return $this->query($sql, $params);
     }
 
-    public function delete($tableName, array $identifier)
+    public function delete(string $tableName, array $identifier): Db_PdoStatement
     {
         $criteria = array();
         foreach (array_keys($identifier) as $columnName) {
@@ -170,7 +170,7 @@ final class Db_Pdo extends PDO
         return $this->query($query, array_values($identifier));
     }
 
-    public function beginTransaction()
+    public function beginTransaction(): self
     {
         $q = $this->getProfiler()->queryStart('begin', Db_Profiler::TRANSACTION);
         parent::beginTransaction();
@@ -179,7 +179,7 @@ final class Db_Pdo extends PDO
         return $this;
     }
 
-    public function commit()
+    public function commit(): self
     {
         $q = $this->getProfiler()->queryStart('commit', Db_Profiler::TRANSACTION);
         parent::commit();
@@ -188,7 +188,7 @@ final class Db_Pdo extends PDO
         return $this;
     }
 
-    public function rollBack()
+    public function rollBack(): self
     {
         $q = $this->getProfiler()->queryStart('rollback', Db_Profiler::TRANSACTION);
         parent::rollBack();
@@ -197,7 +197,7 @@ final class Db_Pdo extends PDO
         return $this;
     }
 
-    public function quoteIdentifier($str)
+    public function quoteIdentifier(string $str): string
     {
         if (strpos($str, '.') !== false) {
             $parts = array_map(array($this, 'quoteSingleIdentifier'), explode('.', $str));
@@ -208,10 +208,10 @@ final class Db_Pdo extends PDO
         return $this->quoteSingleIdentifier($str);
     }
 
-    public function quoteSingleIdentifier($str)
+    public function quoteSingleIdentifier(string $str): string
     {
         static $c = '`';
 
-        return $c . str_replace($c, $c.$c, $str) . $c;
+        return $c . str_replace($c, $c . $c, $str) . $c;
     }
 }

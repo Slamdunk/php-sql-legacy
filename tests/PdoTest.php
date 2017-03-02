@@ -151,7 +151,7 @@ final class PdoTest extends TestCase
         $this->assertFalse($profiler->getLastQueryProfile());
 
         $this->assertCount(0, $profiler->getQueryProfiles());
-        $this->assertSame(0, $profiler->getTotalElapsedSecs());
+        $this->assertSame((float) 0, $profiler->getTotalElapsedSecs());
         $this->assertSame(0, $profiler->getTotalNumQueries());
 
         $this->pdo->beginTransaction();

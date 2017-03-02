@@ -25,14 +25,14 @@ final class Db_Profiler
 
     private $enabled = false;
 
-    public function getEnabled()
+    public function getEnabled(): bool
     {
         return $this->enabled;
     }
 
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled)
     {
-        $this->enabled = (bool) $enabled;
+        $this->enabled = $enabled;
 
         return $this;
     }
@@ -44,7 +44,7 @@ final class Db_Profiler
         return $this;
     }
 
-    public function queryClone(Db_ProfilerQuery $query)
+    public function queryClone(Db_ProfilerQuery $query): int
     {
         $this->queryProfiles[] = clone $query;
 
@@ -53,7 +53,7 @@ final class Db_Profiler
         return key($this->queryProfiles);
     }
 
-    public function queryStart($queryText, $queryType = null)
+    public function queryStart(string $queryText, int $queryType = null)
     {
         if (! $this->enabled) {
             return;
@@ -74,7 +74,7 @@ final class Db_Profiler
         return key($this->queryProfiles);
     }
 
-    public function queryEnd($queryId)
+    public function queryEnd($queryId): string
     {
         if (! $this->enabled) {
             return self::IGNORED;
@@ -95,7 +95,7 @@ final class Db_Profiler
         return self::STORED;
     }
 
-    public function getQueryProfile($queryId)
+    public function getQueryProfile(int $queryId): Db_ProfilerQuery
     {
         if (! array_key_exists($queryId, $this->queryProfiles)) {
             throw new Db_Exception("Query handle '$queryId' not found in profiler log.");
@@ -104,7 +104,7 @@ final class Db_Profiler
         return $this->queryProfiles[$queryId];
     }
 
-    public function getQueryProfiles($queryType = null, $showUnfinished = false)
+    public function getQueryProfiles(int $queryType = null, bool $showUnfinished = false): array
     {
         $queryProfiles = array();
         foreach ($this->queryProfiles as $key => $qp) {
@@ -122,7 +122,7 @@ final class Db_Profiler
         return $queryProfiles;
     }
 
-    public function getTotalElapsedSecs($queryType = null)
+    public function getTotalElapsedSecs(int $queryType = null): float
     {
         $elapsedSecs = 0;
         foreach ($this->queryProfiles as $key => $qp) {
@@ -139,7 +139,7 @@ final class Db_Profiler
         return $elapsedSecs;
     }
 
-    public function getTotalNumQueries($queryType = null)
+    public function getTotalNumQueries(int $queryType = null): int
     {
         if (null === $queryType) {
             return count($this->queryProfiles);
