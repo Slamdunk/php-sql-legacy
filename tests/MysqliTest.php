@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SlamTest\Db;
 
 use Db_Exception;
 use Db_Mysqli;
+use PHPUnit\Framework\TestCase;
 
-final class MysqliTest extends \PHPUnit_Framework_TestCase
+final class MysqliTest extends TestCase
 {
     protected function setUp()
     {
@@ -46,7 +49,7 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
 
         $db = new Db_Mysqli();
 
-        $this->setExpectedException('mysqli_sql_exception');
+        $this->expectException('mysqli_sql_exception');
 
         $db->getConnection();
     }
@@ -136,7 +139,7 @@ final class MysqliTest extends \PHPUnit_Framework_TestCase
 
     public function testCannotNextRecordWithoutQuery()
     {
-        $this->setExpectedException('Db_Exception');
+        $this->expectException('Db_Exception');
 
         $this->db->next_record();
     }

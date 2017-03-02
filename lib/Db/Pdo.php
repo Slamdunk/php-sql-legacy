@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 final class Db_Pdo extends PDO
 {
     public static $sqlBigSelects = true;
@@ -193,5 +195,23 @@ final class Db_Pdo extends PDO
         $this->getProfiler()->queryEnd($q);
 
         return $this;
+    }
+
+    public function quoteIdentifier($str)
+    {
+        if (strpos($str, '.') !== false) {
+            $parts = array_map(array($this, 'quoteSingleIdentifier'), explode('.', $str));
+
+            return implode('.', $parts);
+        }
+
+        return $this->quoteSingleIdentifier($str);
+    }
+
+    public function quoteSingleIdentifier($str)
+    {
+        static $c = '`';
+
+        return $c . str_replace($c, $c.$c, $str) . $c;
     }
 }

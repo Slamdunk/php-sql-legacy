@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SlamTest\Db;
 
 use Db_Pdo;
 use Db_Profiler;
+use PHPUnit\Framework\TestCase;
 
-final class PdoTest extends \PHPUnit_Framework_TestCase
+final class PdoTest extends TestCase
 {
     private $maxLifeTimeBackup;
 
@@ -124,7 +127,7 @@ final class PdoTest extends \PHPUnit_Framework_TestCase
 
     public function testExplicitSingleton()
     {
-        $this->setExpectedException('Db_Exception');
+        $this->expectException('Db_Exception');
 
         Db_Pdo::getInstance();
     }
@@ -188,7 +191,7 @@ final class PdoTest extends \PHPUnit_Framework_TestCase
         $profiler = new Db_Profiler();
         $profiler->setEnabled(true);
 
-        $this->setExpectedException('Db_Exception');
+        $this->expectException('Db_Exception');
 
         $profiler->queryEnd(999);
     }
@@ -200,7 +203,7 @@ final class PdoTest extends \PHPUnit_Framework_TestCase
         $id = $profiler->queryStart('SELECT 1');
         $profiler->queryEnd($id);
 
-        $this->setExpectedException('Db_Exception');
+        $this->expectException('Db_Exception');
 
         $profiler->queryEnd($id);
     }
@@ -209,8 +212,15 @@ final class PdoTest extends \PHPUnit_Framework_TestCase
     {
         $profiler = new Db_Profiler();
 
-        $this->setExpectedException('Db_Exception');
+        $this->expectException('Db_Exception');
 
         $profiler->getQueryProfile(999);
+    }
+
+    public function testQuoteIdentifier()
+    {
+        $this->assertSame('`space ``table`', $this->pdo->quoteIdentifier('space `table'));
+        $this->assertSame('`my space ``database`.`space ``table`', $this->pdo->quoteIdentifier('my space `database.space `table'));
+        $this->assertSame('`my space ``database.space ``table`', $this->pdo->quoteSingleIdentifier('my space `database.space `table'));
     }
 }
