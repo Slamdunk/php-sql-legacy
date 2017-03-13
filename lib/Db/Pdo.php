@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 final class Db_Pdo extends PDO
 {
-    public static $sqlBigSelects = true;
-
     public static $maxLifeTime = -1;
 
     private static $currentSharedInstance;
@@ -91,8 +89,6 @@ final class Db_Pdo extends PDO
     public static function setInstance(Db_Pdo $instance): self
     {
         self::$currentSharedInstance = $instance;
-
-        self::$sqlBigSelects and self::$currentSharedInstance->query('SET SQL_BIG_SELECTS = 1');
 
         return self::$currentSharedInstance;
     }

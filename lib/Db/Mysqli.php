@@ -38,7 +38,6 @@ final class Db_Mysqli
         );
 
         self::$mysqli->real_query('SET CHARACTER SET "' . self::$Connection_Charset . '"');
-        self::$mysqli->real_query('SET SQL_BIG_SELECTS = 1');
     }
 
     public static function resetInstance()

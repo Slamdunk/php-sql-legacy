@@ -14,8 +14,6 @@ final class PdoTest extends TestCase
 
     protected function setUp()
     {
-        Db_Pdo::$sqlBigSelects = false;
-
         $this->maxLifeTimeBackup = Db_Pdo::$maxLifeTime;
         Db_Pdo::resetInstance();
 
