@@ -21,7 +21,10 @@
         }
     },
     "require": {
-        "php":             "^7.0"
+        "php": "^7.0"
+    },
+    "require-dev": {
+        "slam/php-cs-fixer-extensions": "^1.0"
     },
     "suggest": {
         "ext-mysqli":       "",

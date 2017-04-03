@@ -2,6 +2,10 @@ language: php
 
 sudo: false
 
+cache:
+  directory:
+    - $HOME/.composer/cache
+
 services:
   - mysql
 
@@ -10,7 +14,6 @@ php:
   - 7.1
 
 install:
-  - composer self-update
   - composer install --prefer-dist
 
 before_script:
@@ -18,6 +21,7 @@ before_script:
 
 script:
   - phpunit --coverage-text
+  - vendor/bin/php-cs-fixer --diff --dry-run --verbose fix
 
 notifications:
   email: false
