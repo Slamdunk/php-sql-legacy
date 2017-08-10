@@ -24,7 +24,7 @@ services:
 install: wget -qO - https://github.com/Slamdunk/travis-scripts/raw/master/php-install.sh | sh
 
 before_script:
-  - mysql -e 'create database tools_ci_test;'
+  - mysql -e 'CREATE DATABASE tools_ci_test;'
 
 script: wget -qO - https://github.com/Slamdunk/travis-scripts/raw/master/php-script.sh | sh
 

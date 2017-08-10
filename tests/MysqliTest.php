@@ -28,7 +28,7 @@ final class MysqliTest extends TestCase
                 'Port'                   => 3306,
                 'Socket'                 => '',
                 'Database'               => 'tools_ci_test',
-                'User'                   => 'travis',
+                'User'                   => 'root',
                 'Password'               => '',
                 'Connection_Charset'     => 'latin1',
             );
