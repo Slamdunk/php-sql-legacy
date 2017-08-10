@@ -17,7 +17,7 @@ final class Db_Mysqli
     public $Record = array();
 
     private static $mysqli  = null;
-    private $mysqli_result  = null;
+    private $mysqli_result;
 
     private function connect()
     {

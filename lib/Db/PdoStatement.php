@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 final class Db_PdoStatement extends PDOStatement
 {
-    protected $adapter = null;
+    protected $adapter;
 
-    protected $queryId = null;
+    protected $queryId;
 
     protected function __construct($adapter, $fetchMode = '')
     {
