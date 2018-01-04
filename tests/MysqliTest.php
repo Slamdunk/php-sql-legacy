@@ -22,7 +22,7 @@ final class MysqliTest extends TestCase
             'Connection_Charset'     => 'latin1',
         );
 
-        if (getenv('TRAVIS') !== false) {
+        if (false !== getenv('TRAVIS')) {
             $parameters = array(
                 'Host'                   => '127.0.0.1',
                 'Port'                   => 3306,

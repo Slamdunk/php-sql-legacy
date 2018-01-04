@@ -21,7 +21,7 @@ final class Db_PdoStatement extends PDOStatement
 
     public function execute($bound_input_params = null)
     {
-        if ($this->queryId === null) {
+        if (null === $this->queryId) {
             return parent::execute($bound_input_params);
         }
 

@@ -21,7 +21,7 @@ final class Db_Mysqli
 
     private function connect()
     {
-        if (self::$mysqli !== null) {
+        if (null !== self::$mysqli) {
             return;
         }
 
@@ -42,7 +42,7 @@ final class Db_Mysqli
 
     public static function resetInstance()
     {
-        if (self::$mysqli === null) {
+        if (null === self::$mysqli) {
             return;
         }
 
@@ -121,7 +121,7 @@ final class Db_Mysqli
         // should ensure that a "mysqli_sql_exception" is always raised in case of failure
         // but the documentation is not clear about if it occurs on EVERY failure.
         // As of yet no test covers this because I never found a false returned without exception
-        if ($this->mysqli_result === false) {
+        if (false === $this->mysqli_result) {
             throw new Db_Exception(sprintf("The following query returned false:\n\n%s", $query));
         }
 
@@ -136,7 +136,7 @@ final class Db_Mysqli
     {
         $this->connect();
 
-        if ($this->mysqli_result === null) {
+        if (null === $this->mysqli_result) {
             throw new Db_Exception('No query active for next_record()');
         }
 

@@ -67,7 +67,7 @@ final class Db_Pdo extends PDO
 
     public static function getInstance(): self
     {
-        if (self::$currentSharedInstance === null) {
+        if (null === self::$currentSharedInstance) {
             throw new Db_Exception('Nessuna connessione globale attivata');
         }
 
@@ -86,7 +86,7 @@ final class Db_Pdo extends PDO
         return self::$currentSharedInstance;
     }
 
-    public static function setInstance(Db_Pdo $instance): self
+    public static function setInstance(self $instance): self
     {
         self::$currentSharedInstance = $instance;
 
@@ -105,7 +105,7 @@ final class Db_Pdo extends PDO
 
     public function getProfiler(): Db_Profiler
     {
-        if ($this->profiler === null) {
+        if (null === $this->profiler) {
             $this->profiler = new Db_Profiler();
         }
 
@@ -195,7 +195,7 @@ final class Db_Pdo extends PDO
 
     public function quoteIdentifier(string $str): string
     {
-        if (strpos($str, '.') !== false) {
+        if (false !== strpos($str, '.')) {
             $parts = array_map(array($this, 'quoteSingleIdentifier'), explode('.', $str));
 
             return implode('.', $parts);

@@ -42,7 +42,7 @@ final class Db_ProfilerQuery
 
     public function hasEnded(): bool
     {
-        return $this->endedMicrotime !== null;
+        return null !== $this->endedMicrotime;
     }
 
     public function getQuery(): string

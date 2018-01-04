@@ -81,13 +81,13 @@ final class Db_Profiler
         }
 
         if (! isset($this->queryProfiles[$queryId])) {
-            throw new Db_Exception("Profiler has no query with handle '$queryId'.");
+            throw new Db_Exception("Profiler has no query with handle '${queryId}'.");
         }
 
         $qp = $this->queryProfiles[$queryId];
 
         if ($qp->hasEnded()) {
-            throw new Db_Exception("Query with profiler handle '$queryId' has already ended.");
+            throw new Db_Exception("Query with profiler handle '${queryId}' has already ended.");
         }
 
         $qp->end();
@@ -98,7 +98,7 @@ final class Db_Profiler
     public function getQueryProfile(int $queryId): Db_ProfilerQuery
     {
         if (! array_key_exists($queryId, $this->queryProfiles)) {
-            throw new Db_Exception("Query handle '$queryId' not found in profiler log.");
+            throw new Db_Exception("Query handle '${queryId}' not found in profiler log.");
         }
 
         return $this->queryProfiles[$queryId];
@@ -108,7 +108,7 @@ final class Db_Profiler
     {
         $queryProfiles = array();
         foreach ($this->queryProfiles as $key => $qp) {
-            if ($queryType === null) {
+            if (null === $queryType) {
                 $condition = true;
             } else {
                 $condition = ($qp->getQueryType() & $queryType);
