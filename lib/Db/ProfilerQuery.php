@@ -12,7 +12,7 @@ final class Db_ProfilerQuery
 
     private $endedMicrotime;
 
-    private $boundParams = array();
+    private $boundParams = [];
 
     public function __construct(string $query, int $queryType)
     {
@@ -24,7 +24,7 @@ final class Db_ProfilerQuery
 
     public function __clone()
     {
-        $this->boundParams = array();
+        $this->boundParams = [];
         $this->endedMicrotime = null;
 
         $this->start();
@@ -32,12 +32,12 @@ final class Db_ProfilerQuery
 
     public function start()
     {
-        $this->startedMicrotime = microtime(true);
+        $this->startedMicrotime = \microtime(true);
     }
 
     public function end()
     {
-        $this->endedMicrotime = microtime(true);
+        $this->endedMicrotime = \microtime(true);
     }
 
     public function hasEnded(): bool
@@ -62,8 +62,8 @@ final class Db_ProfilerQuery
 
     public function bindParams(array $params)
     {
-        if (array_key_exists(0, $params)) {
-            array_unshift($params, null);
+        if (\array_key_exists(0, $params)) {
+            \array_unshift($params, null);
             unset($params[0]);
         }
         foreach ($params as $param => $value) {

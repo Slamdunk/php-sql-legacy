@@ -10,21 +10,21 @@ final class Db_Pdo extends PDO
 
     private $startTime;
 
-    private $dbParams = array();
+    private $dbParams = [];
 
     private $profiler;
 
-    public function __construct($dsn, $username = '', $password = '', $driver_options = array())
+    public function __construct($dsn, $username = '', $password = '', $driver_options = [])
     {
         $original_driver_options = $driver_options;
 
-        $driver_options[PDO::ATTR_STATEMENT_CLASS] = array(
+        $driver_options[PDO::ATTR_STATEMENT_CLASS] = [
             Db_PdoStatement::class,
-            array(
+            [
                 'adapter'   => $this,
                 'fetchMode' => PDO::FETCH_ASSOC,
-            ),
-        );
+            ],
+        ];
 
         $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 
@@ -33,32 +33,32 @@ final class Db_Pdo extends PDO
             unset($driver_options['connection_charset']);
         }
 
-        $this->dbParams = array(
+        $this->dbParams = [
             'dsn'               => $dsn,
             'username'          => $username,
             'password'          => $password,
             'driver_options'    => $original_driver_options,
-        );
+        ];
 
-        $this->startTime = time();
+        $this->startTime = \time();
 
         return parent::__construct($dsn, $username, $password, $driver_options);
     }
 
-    public static function buildDsn(array $dsnCustom = array()): string
+    public static function buildDsn(array $dsnCustom = []): string
     {
-        $dsnDefault = array(
+        $dsnDefault = [
             'host'          => DB_SQL_HOST,
             'port'          => DB_SQL_PORT,
             'dbname'        => DB_SQL_DATABASE,
             'unix_socket'   => DB_SQL_SOCKET,
-        );
-        $dsnArray = array_merge($dsnDefault, $dsnCustom);
+        ];
+        $dsnArray = \array_merge($dsnDefault, $dsnCustom);
 
         $dsn = 'mysql:';
-        foreach (array_keys($dsnDefault) as $key) {
+        foreach (\array_keys($dsnDefault) as $key) {
             if (! empty($dsnArray[$key])) {
-                $dsn .= sprintf('%s=%s;', $key, $dsnArray[$key]);
+                $dsn .= \sprintf('%s=%s;', $key, $dsnArray[$key]);
             }
         }
 
@@ -71,7 +71,7 @@ final class Db_Pdo extends PDO
             throw new Db_Exception('Nessuna connessione globale attivata');
         }
 
-        if (self::$maxLifeTime >= 0 and (time() - self::$currentSharedInstance->startTime) >= self::$maxLifeTime) {
+        if (self::$maxLifeTime >= 0 and (\time() - self::$currentSharedInstance->startTime) >= self::$maxLifeTime) {
             $dbParams = self::$currentSharedInstance->dbParams;
             self::$currentSharedInstance = null;
 
@@ -121,7 +121,7 @@ final class Db_Pdo extends PDO
         return $int;
     }
 
-    public function query(string $statement, array $binds = array())
+    public function query(string $statement, array $binds = [])
     {
         // Needed for profiler
         $stmt = $this->prepare($statement);
@@ -133,22 +133,22 @@ final class Db_Pdo extends PDO
     public function insert(string $tableName, array $data): Db_PdoStatement
     {
         return $this->query('
-            INSERT INTO ' . $tableName . ' (' . implode(', ', array_keys($data)) . ')
-            VALUES (' . implode(', ', array_fill(0, count($data), '?')) . ')
-        ', array_values($data));
+            INSERT INTO ' . $tableName . ' (' . \implode(', ', \array_keys($data)) . ')
+            VALUES (' . \implode(', ', \array_fill(0, \count($data), '?')) . ')
+        ', \array_values($data));
     }
 
     public function update(string $tableName, array $data, array $identifier): Db_PdoStatement
     {
-        $set = array();
+        $set = [];
         foreach ($data as $columnName => $value) {
             $set[] = $columnName . ' = ?';
         }
 
-        $params = array_merge(array_values($data), array_values($identifier));
+        $params = \array_merge(\array_values($data), \array_values($identifier));
 
-        $sql  = 'UPDATE ' . $tableName . ' SET ' . implode(', ', $set)
-                . ' WHERE ' . implode(' = ? AND ', array_keys($identifier))
+        $sql  = 'UPDATE ' . $tableName . ' SET ' . \implode(', ', $set)
+                . ' WHERE ' . \implode(' = ? AND ', \array_keys($identifier))
                 . ' = ?';
 
         return $this->query($sql, $params);
@@ -156,14 +156,14 @@ final class Db_Pdo extends PDO
 
     public function delete(string $tableName, array $identifier): Db_PdoStatement
     {
-        $criteria = array();
-        foreach (array_keys($identifier) as $columnName) {
+        $criteria = [];
+        foreach (\array_keys($identifier) as $columnName) {
             $criteria[] = $columnName . ' = ?';
         }
 
-        $query = 'DELETE FROM ' . $tableName . ' WHERE ' . implode(' AND ', $criteria);
+        $query = 'DELETE FROM ' . $tableName . ' WHERE ' . \implode(' AND ', $criteria);
 
-        return $this->query($query, array_values($identifier));
+        return $this->query($query, \array_values($identifier));
     }
 
     public function beginTransaction(): self
@@ -195,10 +195,10 @@ final class Db_Pdo extends PDO
 
     public function quoteIdentifier(string $str): string
     {
-        if (false !== strpos($str, '.')) {
-            $parts = array_map(array($this, 'quoteSingleIdentifier'), explode('.', $str));
+        if (false !== \strpos($str, '.')) {
+            $parts = \array_map([$this, 'quoteSingleIdentifier'], \explode('.', $str));
 
-            return implode('.', $parts);
+            return \implode('.', $parts);
         }
 
         return $this->quoteSingleIdentifier($str);
@@ -208,6 +208,6 @@ final class Db_Pdo extends PDO
     {
         static $c = '`';
 
-        return $c . str_replace($c, $c . $c, $str) . $c;
+        return $c . \str_replace($c, $c . $c, $str) . $c;
     }
 }

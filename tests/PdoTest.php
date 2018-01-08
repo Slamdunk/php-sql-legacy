@@ -17,9 +17,9 @@ final class PdoTest extends TestCase
         $this->maxLifeTimeBackup = Db_Pdo::$maxLifeTime;
         Db_Pdo::resetInstance();
 
-        $this->pdo = new Db_Pdo('sqlite::memory:', '', '', array(
+        $this->pdo = new Db_Pdo('sqlite::memory:', '', '', [
             'connection_charset' => 'UTF-8',
-        ));
+        ]);
 
         $this->pdo->exec('CREATE TABLE user (id INTEGER PRIMARY KEY ASC, name)');
     }
@@ -31,15 +31,15 @@ final class PdoTest extends TestCase
 
     public function testDsnBuilding()
     {
-        define('DB_SQL_HOST',       '1.2.3.4');
-        define('DB_SQL_PORT',       '5555');
-        define('DB_SQL_DATABASE',   'my_database');
-        define('DB_SQL_SOCKET',     'my_socket');
+        \define('DB_SQL_HOST',      '1.2.3.4');
+        \define('DB_SQL_PORT',      '5555');
+        \define('DB_SQL_DATABASE',  'my_database');
+        \define('DB_SQL_SOCKET',    'my_socket');
 
-        $dsn = Db_Pdo::buildDsn(array(
+        $dsn = Db_Pdo::buildDsn([
             'port' => '9999',
             'option' => 'my_option',
-        ));
+        ]);
 
         $this->assertInternalType('string', $dsn);
         $this->assertContains(DB_SQL_HOST, $dsn);
@@ -54,9 +54,9 @@ final class PdoTest extends TestCase
     {
         $this->assertInternalType('array', $this->pdo->getDbParams());
 
-        $stmt = $this->pdo->insert('user', array(
+        $stmt = $this->pdo->insert('user', [
             'name' => 'Bob',
-        ));
+        ]);
 
         $this->assertInstanceOf('Db_PdoStatement', $stmt);
         $this->assertSame(1, $stmt->rowCount());
@@ -69,15 +69,15 @@ final class PdoTest extends TestCase
 
         $this->assertCount(1, $users);
 
-        $user = current($users);
+        $user = \current($users);
 
         $this->assertSame('Bob', $user['name']);
 
-        $stmt = $this->pdo->update('user', array(
+        $stmt = $this->pdo->update('user', [
             'name' => 'Alice',
-        ), array(
+        ], [
             'id' => $user['id'],
-        ));
+        ]);
 
         $this->assertInstanceOf('Db_PdoStatement', $stmt);
         $this->assertSame(1, $stmt->rowCount());
@@ -87,9 +87,9 @@ final class PdoTest extends TestCase
         $this->assertSame($user['id'], $updatedUser['id']);
         $this->assertSame('Alice', $updatedUser['name']);
 
-        $stmt = $this->pdo->delete('user', array(
+        $stmt = $this->pdo->delete('user', [
             'id' => $updatedUser['id'],
-        ));
+        ]);
 
         $this->assertInstanceOf('Db_PdoStatement', $stmt);
         $this->assertSame(1, $stmt->rowCount());
@@ -98,18 +98,18 @@ final class PdoTest extends TestCase
     public function testTransactions()
     {
         $this->pdo->beginTransaction();
-        $this->pdo->insert('user', array(
+        $this->pdo->insert('user', [
             'name' => 'Alice',
-        ));
+        ]);
         $this->pdo->commit();
 
         $users = $this->pdo->query('SELECT id, name FROM user')->fetchAll();
         $this->assertCount(1, $users);
 
         $this->pdo->beginTransaction();
-        $this->pdo->insert('user', array(
+        $this->pdo->insert('user', [
             'name' => 'Bob',
-        ));
+        ]);
         $this->pdo->rollBack();
 
         $users = $this->pdo->query('SELECT id, name FROM user')->fetchAll();
@@ -153,9 +153,9 @@ final class PdoTest extends TestCase
         $this->assertSame(0, $profiler->getTotalNumQueries());
 
         $this->pdo->beginTransaction();
-        $this->pdo->insert('user', array(
+        $this->pdo->insert('user', [
             'name' => 'Bob',
-        ));
+        ]);
         $this->pdo->rollBack();
 
         $stmt = $this->pdo->prepare('SELECT 1');

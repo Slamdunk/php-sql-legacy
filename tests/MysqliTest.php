@@ -12,7 +12,7 @@ final class MysqliTest extends TestCase
 {
     protected function setUp()
     {
-        $parameters = array(
+        $parameters = [
             'Host'                   => '',
             'Port'                   => 0,
             'Socket'                 => '/var/run/mysqld/mysqld-5.6.sock',
@@ -20,10 +20,10 @@ final class MysqliTest extends TestCase
             'User'                   => 'tools_ci',
             'Password'               => 'tools_ci',
             'Connection_Charset'     => 'latin1',
-        );
+        ];
 
-        if (false !== getenv('TRAVIS')) {
-            $parameters = array(
+        if (false !== \getenv('TRAVIS')) {
+            $parameters = [
                 'Host'                   => '127.0.0.1',
                 'Port'                   => 3306,
                 'Socket'                 => '',
@@ -31,7 +31,7 @@ final class MysqliTest extends TestCase
                 'User'                   => 'root',
                 'Password'               => '',
                 'Connection_Charset'     => 'latin1',
-            );
+            ];
         }
 
         Db_Mysqli::resetInstance();
@@ -45,7 +45,7 @@ final class MysqliTest extends TestCase
     public function testRaiseExceptionWithWrongCredentials()
     {
         Db_Mysqli::resetInstance();
-        Db_Mysqli::$Password = uniqid('wrong_password_');
+        Db_Mysqli::$Password = \uniqid('wrong_password_');
 
         $db = new Db_Mysqli();
 
@@ -71,7 +71,7 @@ final class MysqliTest extends TestCase
 
     public function testRaiseExceptionOnAWrongQueryAndReportQuery()
     {
-        $query = sprintf('SELECT 1 FROM %s', uniqid('non_existing_table_'));
+        $query = \sprintf('SELECT 1 FROM %s', \uniqid('non_existing_table_'));
 
         try {
             $this->db->query($query);
@@ -115,23 +115,23 @@ final class MysqliTest extends TestCase
         $this->assertSame($stmt, $this->db->query_id());
         $this->assertSame(2, $this->db->num_rows());
 
-        $values = array();
+        $values = [];
         while ($this->db->next_record()) {
             $this->assertInternalType('string', $this->db->f('id'));
 
             $values[] = $this->db->Record;
         }
 
-        $expected = array(
-            array(
+        $expected = [
+            [
                 'id' => '1',
                 'name' => 'a',
-            ),
-            array(
+            ],
+            [
                 'id' => '9',
                 'name' => 'b',
-            ),
-        );
+            ],
+        ];
 
         $this->assertSame($expected, $values);
         $this->assertNull($this->db->query_id());

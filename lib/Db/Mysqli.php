@@ -14,7 +14,7 @@ final class Db_Mysqli
 
     public static $enableProfiling = false;
 
-    public $Record = array();
+    public $Record = [];
 
     private static $mysqli  = null;
     private $mysqli_result;
@@ -26,7 +26,7 @@ final class Db_Mysqli
         }
 
         $driver = new mysqli_driver();
-        $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
+        $driver->report_mode = \MYSQLI_REPORT_ERROR | \MYSQLI_REPORT_STRICT;
 
         self::$mysqli = new mysqli(
             self::$Host,
@@ -94,22 +94,22 @@ final class Db_Mysqli
 
         if (self::$enableProfiling) {
             if (! isset($GLOBALS['queries'])) {
-                $GLOBALS['queries'] = array();
+                $GLOBALS['queries'] = [];
             }
 
-            end($GLOBALS['queries']);
-            $key = key($GLOBALS['queries']);
+            \end($GLOBALS['queries']);
+            $key = \key($GLOBALS['queries']);
             ++$key;
 
             $GLOBALS['queries'][$key]['query'] = $query;
 
-            $query_start = microtime(true);
+            $query_start = \microtime(true);
         }
 
         try {
             $this->mysqli_result = self::$mysqli->query($query);
         } catch (mysqli_sql_exception $mysqliException) {
-            $message = sprintf("%s\n\n%s",
+            $message = \sprintf("%s\n\n%s",
                 $mysqliException->getMessage(),
                 $query
             );
@@ -122,11 +122,11 @@ final class Db_Mysqli
         // but the documentation is not clear about if it occurs on EVERY failure.
         // As of yet no test covers this because I never found a false returned without exception
         if (false === $this->mysqli_result) {
-            throw new Db_Exception(sprintf("The following query returned false:\n\n%s", $query));
+            throw new Db_Exception(\sprintf("The following query returned false:\n\n%s", $query));
         }
 
         if (self::$enableProfiling) {
-            $GLOBALS['queries'][$key]['time'] = (microtime(true) - $query_start);
+            $GLOBALS['queries'][$key]['time'] = (\microtime(true) - $query_start);
         }
 
         return $this->mysqli_result;
@@ -142,7 +142,7 @@ final class Db_Mysqli
 
         $this->Record = $this->mysqli_result->fetch_assoc();
 
-        $stat = is_array($this->Record);
+        $stat = \is_array($this->Record);
 
         if (! $stat) {
             $this->free();
@@ -178,16 +178,16 @@ final class Db_Mysqli
 
         $id = $this->query('SELECT * FROM ' . $table . ' WHERE FALSE');
 
-        $result = array();
+        $result = [];
         foreach ($id->fetch_fields() as $field) {
             // For the flags see MYSQLI_*_FLAG constants
-            $result[] = array(
+            $result[] = [
                 'table'     => $field->table,
                 'name'      => $field->name,
                 'type'      => $field->type,
                 'length'    => $field->length,
                 'flags'     => $field->flags,
-            );
+            ];
         }
 
         $this->free();

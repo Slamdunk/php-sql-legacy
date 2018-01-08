@@ -14,14 +14,14 @@ final class Db_Profiler
     const STORED = 'stored';
     const IGNORED = 'ignored';
 
-    private static $map = array(
+    private static $map = [
         'insert' => self::INSERT,
         'update' => self::UPDATE,
         'delete' => self::DELETE,
         'select' => self::SELECT,
-    );
+    ];
 
-    private $queryProfiles = array();
+    private $queryProfiles = [];
 
     private $enabled = false;
 
@@ -39,7 +39,7 @@ final class Db_Profiler
 
     public function clear()
     {
-        $this->queryProfiles = array();
+        $this->queryProfiles = [];
 
         return $this;
     }
@@ -48,9 +48,9 @@ final class Db_Profiler
     {
         $this->queryProfiles[] = clone $query;
 
-        end($this->queryProfiles);
+        \end($this->queryProfiles);
 
-        return key($this->queryProfiles);
+        return \key($this->queryProfiles);
     }
 
     public function queryStart(string $queryText, int $queryType = null)
@@ -61,7 +61,7 @@ final class Db_Profiler
 
         if (null === $queryType) {
             $queryType = self::QUERY;
-            $guess = strtolower(substr(ltrim($queryText), 0, 6));
+            $guess = \strtolower(\substr(\ltrim($queryText), 0, 6));
             if (isset(self::$map[$guess])) {
                 $queryType = self::$map[$guess];
             }
@@ -69,9 +69,9 @@ final class Db_Profiler
 
         $this->queryProfiles[] = new Db_ProfilerQuery($queryText, $queryType);
 
-        end($this->queryProfiles);
+        \end($this->queryProfiles);
 
-        return key($this->queryProfiles);
+        return \key($this->queryProfiles);
     }
 
     public function queryEnd($queryId): string
@@ -97,7 +97,7 @@ final class Db_Profiler
 
     public function getQueryProfile(int $queryId): Db_ProfilerQuery
     {
-        if (! array_key_exists($queryId, $this->queryProfiles)) {
+        if (! \array_key_exists($queryId, $this->queryProfiles)) {
             throw new Db_Exception("Query handle '${queryId}' not found in profiler log.");
         }
 
@@ -106,7 +106,7 @@ final class Db_Profiler
 
     public function getQueryProfiles(int $queryType = null, bool $showUnfinished = false): array
     {
-        $queryProfiles = array();
+        $queryProfiles = [];
         foreach ($this->queryProfiles as $key => $qp) {
             if (null === $queryType) {
                 $condition = true;
@@ -142,7 +142,7 @@ final class Db_Profiler
     public function getTotalNumQueries(int $queryType = null): int
     {
         if (null === $queryType) {
-            return count($this->queryProfiles);
+            return \count($this->queryProfiles);
         }
 
         $numQueries = 0;
@@ -161,8 +161,8 @@ final class Db_Profiler
             return false;
         }
 
-        end($this->queryProfiles);
+        \end($this->queryProfiles);
 
-        return current($this->queryProfiles);
+        return \current($this->queryProfiles);
     }
 }
