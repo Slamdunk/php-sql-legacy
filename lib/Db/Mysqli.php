@@ -92,6 +92,7 @@ final class Db_Mysqli
             $this->free();
         }
 
+        $key = $query_start = null;
         if (self::$enableProfiling) {
             if (! isset($GLOBALS['queries'])) {
                 $GLOBALS['queries'] = [];

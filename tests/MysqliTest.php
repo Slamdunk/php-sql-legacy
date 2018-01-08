@@ -6,10 +6,15 @@ namespace SlamTest\Db;
 
 use Db_Exception;
 use Db_Mysqli;
+use mysqli;
+use mysqli_result;
+use mysqli_sql_exception;
 use PHPUnit\Framework\TestCase;
 
 final class MysqliTest extends TestCase
 {
+    private $db;
+
     protected function setUp()
     {
         $parameters = [
@@ -49,14 +54,14 @@ final class MysqliTest extends TestCase
 
         $db = new Db_Mysqli();
 
-        $this->expectException('mysqli_sql_exception');
+        $this->expectException(mysqli_sql_exception::class);
 
         $db->getConnection();
     }
 
     public function testHasAMysqliConnection()
     {
-        $this->assertInstanceOf('mysqli', $this->db->getConnection());
+        $this->assertInstanceOf(mysqli::class, $this->db->getConnection());
     }
 
     public function testEscape()
@@ -81,7 +86,7 @@ final class MysqliTest extends TestCase
 
             $previousException = $dbException->getPrevious();
 
-            $this->assertInstanceOf('mysqli_sql_exception', $previousException);
+            $this->assertInstanceOf(mysqli_sql_exception::class, $previousException);
         }
     }
 
@@ -111,7 +116,7 @@ final class MysqliTest extends TestCase
 
         $stmt = $this->db->query('SELECT id, name FROM query_test');
 
-        $this->assertInstanceOf('mysqli_result', $stmt);
+        $this->assertInstanceOf(mysqli_result::class, $stmt);
         $this->assertSame($stmt, $this->db->query_id());
         $this->assertSame(2, $this->db->num_rows());
 
@@ -142,7 +147,7 @@ final class MysqliTest extends TestCase
 
     public function testCannotNextRecordWithoutQuery()
     {
-        $this->expectException('Db_Exception');
+        $this->expectException(Db_Exception::class);
 
         $this->db->next_record();
     }

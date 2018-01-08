@@ -42,7 +42,7 @@ final class Db_Pdo extends PDO
 
         $this->startTime = \time();
 
-        return parent::__construct($dsn, $username, $password, $driver_options);
+        parent::__construct($dsn, $username, $password, $driver_options);
     }
 
     public static function buildDsn(array $dsnCustom = []): string

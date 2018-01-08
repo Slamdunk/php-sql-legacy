@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace SlamTest\Db;
 
+use Db_Exception;
 use Db_Pdo;
+use Db_PdoStatement;
 use Db_Profiler;
+use Db_ProfilerQuery;
 use PHPUnit\Framework\TestCase;
 
 final class PdoTest extends TestCase
 {
+    private $pdo;
+
     private $maxLifeTimeBackup;
 
     protected function setUp()
@@ -58,12 +63,12 @@ final class PdoTest extends TestCase
             'name' => 'Bob',
         ]);
 
-        $this->assertInstanceOf('Db_PdoStatement', $stmt);
+        $this->assertInstanceOf(Db_PdoStatement::class, $stmt);
         $this->assertSame(1, $stmt->rowCount());
 
         $stmt = $this->pdo->query('SELECT id, name FROM user');
 
-        $this->assertInstanceOf('Db_PdoStatement', $stmt);
+        $this->assertInstanceOf(Db_PdoStatement::class, $stmt);
 
         $users = $stmt->fetchAll();
 
@@ -79,7 +84,7 @@ final class PdoTest extends TestCase
             'id' => $user['id'],
         ]);
 
-        $this->assertInstanceOf('Db_PdoStatement', $stmt);
+        $this->assertInstanceOf(Db_PdoStatement::class, $stmt);
         $this->assertSame(1, $stmt->rowCount());
 
         $updatedUser = $this->pdo->query('SELECT id, name FROM user')->fetch();
@@ -91,7 +96,7 @@ final class PdoTest extends TestCase
             'id' => $updatedUser['id'],
         ]);
 
-        $this->assertInstanceOf('Db_PdoStatement', $stmt);
+        $this->assertInstanceOf(Db_PdoStatement::class, $stmt);
         $this->assertSame(1, $stmt->rowCount());
     }
 
@@ -118,14 +123,14 @@ final class PdoTest extends TestCase
 
     public function testSingleton()
     {
-        Db_Pdo::setInstance($this->pdo, false);
+        Db_Pdo::setInstance($this->pdo);
 
         $this->assertSame($this->pdo, Db_Pdo::getInstance());
     }
 
     public function testExplicitSingleton()
     {
-        $this->expectException('Db_Exception');
+        $this->expectException(Db_Exception::class);
 
         Db_Pdo::getInstance();
     }
@@ -161,7 +166,7 @@ final class PdoTest extends TestCase
         $stmt = $this->pdo->prepare('SELECT 1');
         $lastQuery = $profiler->getLastQueryProfile();
 
-        $this->assertInstanceOf('Db_ProfilerQuery', $lastQuery);
+        $this->assertInstanceOf(Db_ProfilerQuery::class, $lastQuery);
         $this->assertSame('SELECT 1', $lastQuery->getQuery());
         $this->assertEmpty($lastQuery->getQueryParams());
         $this->assertFalse($lastQuery->getElapsedSecs());
@@ -189,7 +194,7 @@ final class PdoTest extends TestCase
         $profiler = new Db_Profiler();
         $profiler->setEnabled(true);
 
-        $this->expectException('Db_Exception');
+        $this->expectException(Db_Exception::class);
 
         $profiler->queryEnd(999);
     }
@@ -201,7 +206,7 @@ final class PdoTest extends TestCase
         $id = $profiler->queryStart('SELECT 1');
         $profiler->queryEnd($id);
 
-        $this->expectException('Db_Exception');
+        $this->expectException(Db_Exception::class);
 
         $profiler->queryEnd($id);
     }
@@ -210,7 +215,7 @@ final class PdoTest extends TestCase
     {
         $profiler = new Db_Profiler();
 
-        $this->expectException('Db_Exception');
+        $this->expectException(Db_Exception::class);
 
         $profiler->getQueryProfile(999);
     }
