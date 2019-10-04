@@ -26,11 +26,11 @@ final class Db_PdoStatement extends PDOStatement
         }
 
         $prof = $this->adapter->getProfiler();
-        $qp = $prof->getQueryProfile($this->queryId);
+        $qp   = $prof->getQueryProfile($this->queryId);
 
         if ($qp->hasEnded()) {
             $this->queryId = $prof->queryClone($qp);
-            $qp = $prof->getQueryProfile($this->queryId);
+            $qp            = $prof->getQueryProfile($this->queryId);
         }
 
         if (! empty($bound_input_params)) {

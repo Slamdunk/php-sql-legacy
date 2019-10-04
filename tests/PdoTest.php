@@ -42,41 +42,42 @@ final class PdoTest extends TestCase
         \define('DB_SQL_SOCKET',    'my_socket');
 
         $dsn = Db_Pdo::buildDsn([
-            'port' => '9999',
+            'port'   => '9999',
             'option' => 'my_option',
         ]);
 
-        $this->assertInternalType('string', $dsn);
-        $this->assertContains(DB_SQL_HOST, $dsn);
-        $this->assertNotContains(DB_SQL_PORT, $dsn);
-        $this->assertContains('9999', $dsn);
-        $this->assertContains('my_database', $dsn);
-        $this->assertContains('my_socket', $dsn);
-        $this->assertNotContains('my_option', $dsn);
+        static::assertIsString($dsn);
+        static::assertContains(DB_SQL_HOST, $dsn);
+        static::assertNotContains(DB_SQL_PORT, $dsn);
+        static::assertContains('9999', $dsn);
+        static::assertContains('my_database', $dsn);
+        static::assertContains('my_socket', $dsn);
+        static::assertNotContains('my_option', $dsn);
     }
 
     public function testBaseQueries()
     {
-        $this->assertInternalType('array', $this->pdo->getDbParams());
+        static::assertIsArray($this->pdo->getDbParams());
 
         $stmt = $this->pdo->insert('user', [
             'name' => 'Bob',
         ]);
 
-        $this->assertInstanceOf(Db_PdoStatement::class, $stmt);
-        $this->assertSame(1, $stmt->rowCount());
+        static::assertInstanceOf(Db_PdoStatement::class, $stmt);
+        static::assertSame(1, $stmt->rowCount());
 
         $stmt = $this->pdo->query('SELECT id, name FROM user');
 
-        $this->assertInstanceOf(Db_PdoStatement::class, $stmt);
+        static::assertInstanceOf(Db_PdoStatement::class, $stmt);
 
         $users = $stmt->fetchAll();
 
-        $this->assertCount(1, $users);
+        static::assertIsArray($users);
+        static::assertCount(1, $users);
 
         $user = \current($users);
 
-        $this->assertSame('Bob', $user['name']);
+        static::assertSame('Bob', $user['name']);
 
         $stmt = $this->pdo->update('user', [
             'name' => 'Alice',
@@ -84,20 +85,20 @@ final class PdoTest extends TestCase
             'id' => $user['id'],
         ]);
 
-        $this->assertInstanceOf(Db_PdoStatement::class, $stmt);
-        $this->assertSame(1, $stmt->rowCount());
+        static::assertInstanceOf(Db_PdoStatement::class, $stmt);
+        static::assertSame(1, $stmt->rowCount());
 
         $updatedUser = $this->pdo->query('SELECT id, name FROM user')->fetch();
 
-        $this->assertSame($user['id'], $updatedUser['id']);
-        $this->assertSame('Alice', $updatedUser['name']);
+        static::assertSame($user['id'], $updatedUser['id']);
+        static::assertSame('Alice', $updatedUser['name']);
 
         $stmt = $this->pdo->delete('user', [
             'id' => $updatedUser['id'],
         ]);
 
-        $this->assertInstanceOf(Db_PdoStatement::class, $stmt);
-        $this->assertSame(1, $stmt->rowCount());
+        static::assertInstanceOf(Db_PdoStatement::class, $stmt);
+        static::assertSame(1, $stmt->rowCount());
     }
 
     public function testTransactions()
@@ -109,7 +110,7 @@ final class PdoTest extends TestCase
         $this->pdo->commit();
 
         $users = $this->pdo->query('SELECT id, name FROM user')->fetchAll();
-        $this->assertCount(1, $users);
+        static::assertCount(1, $users);
 
         $this->pdo->beginTransaction();
         $this->pdo->insert('user', [
@@ -118,14 +119,14 @@ final class PdoTest extends TestCase
         $this->pdo->rollBack();
 
         $users = $this->pdo->query('SELECT id, name FROM user')->fetchAll();
-        $this->assertCount(1, $users);
+        static::assertCount(1, $users);
     }
 
     public function testSingleton()
     {
         Db_Pdo::setInstance($this->pdo);
 
-        $this->assertSame($this->pdo, Db_Pdo::getInstance());
+        static::assertSame($this->pdo, Db_Pdo::getInstance());
     }
 
     public function testExplicitSingleton()
@@ -140,22 +141,22 @@ final class PdoTest extends TestCase
         Db_Pdo::$maxLifeTime = 0;
         Db_Pdo::setInstance($this->pdo);
 
-        $this->assertNotSame($this->pdo, Db_Pdo::getInstance());
+        static::assertNotSame($this->pdo, Db_Pdo::getInstance());
     }
 
     public function testProfiler()
     {
         $profiler = $this->pdo->getProfiler();
 
-        $this->assertFalse($profiler->getEnabled());
+        static::assertFalse($profiler->getEnabled());
         $profiler->setEnabled(true);
-        $this->assertTrue($profiler->getEnabled());
+        static::assertTrue($profiler->getEnabled());
 
-        $this->assertFalse($profiler->getLastQueryProfile());
+        static::assertFalse($profiler->getLastQueryProfile());
 
-        $this->assertCount(0, $profiler->getQueryProfiles());
-        $this->assertSame((float) 0, $profiler->getTotalElapsedSecs());
-        $this->assertSame(0, $profiler->getTotalNumQueries());
+        static::assertCount(0, $profiler->getQueryProfiles());
+        static::assertSame((float) 0, $profiler->getTotalElapsedSecs());
+        static::assertSame(0, $profiler->getTotalNumQueries());
 
         $this->pdo->beginTransaction();
         $this->pdo->insert('user', [
@@ -163,30 +164,30 @@ final class PdoTest extends TestCase
         ]);
         $this->pdo->rollBack();
 
-        $stmt = $this->pdo->prepare('SELECT 1');
+        $stmt      = $this->pdo->prepare('SELECT 1');
         $lastQuery = $profiler->getLastQueryProfile();
 
-        $this->assertInstanceOf(Db_ProfilerQuery::class, $lastQuery);
-        $this->assertSame('SELECT 1', $lastQuery->getQuery());
-        $this->assertEmpty($lastQuery->getQueryParams());
-        $this->assertFalse($lastQuery->getElapsedSecs());
+        static::assertInstanceOf(Db_ProfilerQuery::class, $lastQuery);
+        static::assertSame('SELECT 1', $lastQuery->getQuery());
+        static::assertEmpty($lastQuery->getQueryParams());
+        static::assertFalse($lastQuery->getElapsedSecs());
 
         $stmt->execute();
         $stmt->execute();
 
-        $this->assertGreaterThan(0, $lastQuery->getElapsedSecs());
+        static::assertGreaterThan(0, $lastQuery->getElapsedSecs());
 
-        $this->assertCount(5, $profiler->getQueryProfiles());
-        $this->assertGreaterThan(0, $profiler->getTotalElapsedSecs());
-        $this->assertSame(5, $profiler->getTotalNumQueries());
+        static::assertCount(5, $profiler->getQueryProfiles());
+        static::assertGreaterThan(0, $profiler->getTotalElapsedSecs());
+        static::assertSame(5, $profiler->getTotalNumQueries());
 
-        $this->assertCount(1, $profiler->getQueryProfiles(Db_Profiler::INSERT));
-        $this->assertGreaterThan(0, $profiler->getTotalElapsedSecs(Db_Profiler::INSERT));
-        $this->assertSame(1, $profiler->getTotalNumQueries(Db_Profiler::INSERT));
+        static::assertCount(1, $profiler->getQueryProfiles(Db_Profiler::INSERT));
+        static::assertGreaterThan(0, $profiler->getTotalElapsedSecs(Db_Profiler::INSERT));
+        static::assertSame(1, $profiler->getTotalNumQueries(Db_Profiler::INSERT));
 
         $profiler->clear();
 
-        $this->assertCount(0, $profiler->getQueryProfiles());
+        static::assertCount(0, $profiler->getQueryProfiles());
     }
 
     public function testIncosistentQueryState()
@@ -222,8 +223,8 @@ final class PdoTest extends TestCase
 
     public function testQuoteIdentifier()
     {
-        $this->assertSame('`space ``table`', $this->pdo->quoteIdentifier('space `table'));
-        $this->assertSame('`my space ``database`.`space ``table`', $this->pdo->quoteIdentifier('my space `database.space `table'));
-        $this->assertSame('`my space ``database.space ``table`', $this->pdo->quoteSingleIdentifier('my space `database.space `table'));
+        static::assertSame('`space ``table`', $this->pdo->quoteIdentifier('space `table'));
+        static::assertSame('`my space ``database`.`space ``table`', $this->pdo->quoteIdentifier('my space `database.space `table'));
+        static::assertSame('`my space ``database.space ``table`', $this->pdo->quoteSingleIdentifier('my space `database.space `table'));
     }
 }

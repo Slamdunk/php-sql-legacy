@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 final class Db_Profiler
 {
-    const CONNECT = 1;
-    const QUERY = 2;
-    const INSERT = 4;
-    const UPDATE = 8;
-    const DELETE = 16;
-    const SELECT = 32;
-    const TRANSACTION = 64;
-    const STORED = 'stored';
-    const IGNORED = 'ignored';
+    public const CONNECT     = 1;
+    public const QUERY       = 2;
+    public const INSERT      = 4;
+    public const UPDATE      = 8;
+    public const DELETE      = 16;
+    public const SELECT      = 32;
+    public const TRANSACTION = 64;
+    public const STORED      = 'stored';
+    public const IGNORED     = 'ignored';
 
+    /**
+     * @var array
+     */
     private static $map = [
         'insert' => self::INSERT,
         'update' => self::UPDATE,
@@ -21,8 +24,14 @@ final class Db_Profiler
         'select' => self::SELECT,
     ];
 
+    /**
+     * @var array<int, Db_ProfilerQuery>
+     */
     private $queryProfiles = [];
 
+    /**
+     * @var bool
+     */
     private $enabled = false;
 
     public function getEnabled(): bool
@@ -61,7 +70,7 @@ final class Db_Profiler
 
         if (null === $queryType) {
             $queryType = self::QUERY;
-            $guess = \strtolower(\substr(\ltrim($queryText), 0, 6));
+            $guess     = \strtolower(\substr(\ltrim($queryText), 0, 6));
             if (isset(self::$map[$guess])) {
                 $queryType = self::$map[$guess];
             }
