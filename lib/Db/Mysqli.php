@@ -25,7 +25,7 @@ final class Db_Mysqli
             return;
         }
 
-        $driver = new mysqli_driver();
+        $driver              = new mysqli_driver();
         $driver->report_mode = \MYSQLI_REPORT_ERROR | \MYSQLI_REPORT_STRICT;
 
         self::$mysqli = new mysqli(

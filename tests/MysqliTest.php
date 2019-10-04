@@ -61,17 +61,17 @@ final class MysqliTest extends TestCase
 
     public function testHasAMysqliConnection()
     {
-        $this->assertInstanceOf(mysqli::class, $this->db->getConnection());
+        static::assertInstanceOf(mysqli::class, $this->db->getConnection());
     }
 
     public function testEscape()
     {
         $string = '"';
 
-        $this->assertNotSame($string, $this->db->escape($string));
+        static::assertNotSame($string, $this->db->escape($string));
 
-        $this->assertSame('1', $this->db->escape(1));
-        $this->assertSame('A', $this->db->escape('A'));
+        static::assertSame('1', $this->db->escape(1));
+        static::assertSame('A', $this->db->escape('A'));
     }
 
     public function testRaiseExceptionOnAWrongQueryAndReportQuery()
@@ -80,19 +80,19 @@ final class MysqliTest extends TestCase
 
         try {
             $this->db->query($query);
-            $this->fail('No Db_Exception thrown');
+            static::fail('No Db_Exception thrown');
         } catch (Db_Exception $dbException) {
-            $this->assertContains($query, $dbException->getMessage());
+            static::assertContains($query, $dbException->getMessage());
 
             $previousException = $dbException->getPrevious();
 
-            $this->assertInstanceOf(mysqli_sql_exception::class, $previousException);
+            static::assertInstanceOf(mysqli_sql_exception::class, $previousException);
         }
     }
 
     public function testNormalQueryBehaviours()
     {
-        $this->assertFalse(Db_Mysqli::$enableProfiling);
+        static::assertFalse(Db_Mysqli::$enableProfiling);
 
         Db_Mysqli::$enableProfiling = true;
 
@@ -106,43 +106,43 @@ final class MysqliTest extends TestCase
 
         $result = $this->db->query('INSERT INTO query_test (id, name) VALUES (1, "a"), (9, "b")');
 
-        $this->assertArrayHasKey('queries', $GLOBALS);
+        static::assertArrayHasKey('queries', $GLOBALS);
 
         Db_Mysqli::$enableProfiling = false;
 
-        $this->assertTrue($result);
-        $this->assertSame(2, $this->db->affected_rows());
-        $this->assertSame(9, $this->db->last_insert_id());
+        static::assertTrue($result);
+        static::assertSame(2, $this->db->affected_rows());
+        static::assertSame(9, $this->db->last_insert_id());
 
         $stmt = $this->db->query('SELECT id, name FROM query_test');
 
-        $this->assertInstanceOf(mysqli_result::class, $stmt);
-        $this->assertSame($stmt, $this->db->query_id());
-        $this->assertSame(2, $this->db->num_rows());
+        static::assertInstanceOf(mysqli_result::class, $stmt);
+        static::assertSame($stmt, $this->db->query_id());
+        static::assertSame(2, $this->db->num_rows());
 
         $values = [];
         while ($this->db->next_record()) {
-            $this->assertInternalType('string', $this->db->f('id'));
+            static::assertIsString($this->db->f('id'));
 
             $values[] = $this->db->Record;
         }
 
         $expected = [
             [
-                'id' => '1',
+                'id'   => '1',
                 'name' => 'a',
             ],
             [
-                'id' => '9',
+                'id'   => '9',
                 'name' => 'b',
             ],
         ];
 
-        $this->assertSame($expected, $values);
-        $this->assertNull($this->db->query_id());
+        static::assertSame($expected, $values);
+        static::assertNull($this->db->query_id());
 
         $metadata = $this->db->metadata('query_test');
-        $this->assertSame('id', $metadata[0]['name']);
+        static::assertSame('id', $metadata[0]['name']);
     }
 
     public function testCannotNextRecordWithoutQuery()

@@ -4,14 +4,29 @@ declare(strict_types=1);
 
 final class Db_Pdo extends PDO
 {
+    /**
+     * @var int
+     */
     public static $maxLifeTime = -1;
 
+    /**
+     * @var null|self
+     */
     private static $currentSharedInstance;
 
+    /**
+     * @var int
+     */
     private $startTime;
 
+    /**
+     * @var array
+     */
     private $dbParams = [];
 
+    /**
+     * @var null|Db_Profiler
+     */
     private $profiler;
 
     public function __construct($dsn, $username = '', $password = '', $driver_options = [])
@@ -71,8 +86,8 @@ final class Db_Pdo extends PDO
             throw new Db_Exception('Nessuna connessione globale attivata');
         }
 
-        if (self::$maxLifeTime >= 0 and (\time() - self::$currentSharedInstance->startTime) >= self::$maxLifeTime) {
-            $dbParams = self::$currentSharedInstance->dbParams;
+        if (self::$maxLifeTime >= 0 && (\time() - self::$currentSharedInstance->startTime) >= self::$maxLifeTime) {
+            $dbParams                    = self::$currentSharedInstance->dbParams;
             self::$currentSharedInstance = null;
 
             self::setInstance(new self(
@@ -114,7 +129,7 @@ final class Db_Pdo extends PDO
 
     public function exec($statement)
     {
-        $q = $this->getProfiler()->queryStart($statement);
+        $q   = $this->getProfiler()->queryStart($statement);
         $int = parent::exec($statement);
         $this->getProfiler()->queryEnd($q);
 

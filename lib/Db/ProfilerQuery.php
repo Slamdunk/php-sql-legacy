@@ -16,7 +16,7 @@ final class Db_ProfilerQuery
 
     public function __construct(string $query, int $queryType)
     {
-        $this->query = $query;
+        $this->query     = $query;
         $this->queryType = $queryType;
 
         $this->start();
@@ -24,7 +24,7 @@ final class Db_ProfilerQuery
 
     public function __clone()
     {
-        $this->boundParams = [];
+        $this->boundParams    = [];
         $this->endedMicrotime = null;
 
         $this->start();
