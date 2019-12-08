@@ -108,7 +108,7 @@ final class Db_Pdo extends PDO
         return self::$currentSharedInstance;
     }
 
-    public static function resetInstance()
+    public static function resetInstance(): void
     {
         self::$currentSharedInstance = null;
     }

@@ -19,7 +19,7 @@ final class Db_Mysqli
     private static $mysqli  = null;
     private $mysqli_result;
 
-    private function connect()
+    private function connect(): void
     {
         if (null !== self::$mysqli) {
             return;
@@ -40,7 +40,7 @@ final class Db_Mysqli
         self::$mysqli->real_query('SET CHARACTER SET "' . self::$Connection_Charset . '"');
     }
 
-    public static function resetInstance()
+    public static function resetInstance(): void
     {
         if (null === self::$mysqli) {
             return;
