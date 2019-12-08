@@ -62,7 +62,7 @@ final class Db_Profiler
         return \key($this->queryProfiles);
     }
 
-    public function queryStart(string $queryText, int $queryType = null)
+    public function queryStart(string $queryText, ?int $queryType = null)
     {
         if (! $this->enabled) {
             return;
@@ -113,7 +113,7 @@ final class Db_Profiler
         return $this->queryProfiles[$queryId];
     }
 
-    public function getQueryProfiles(int $queryType = null, bool $showUnfinished = false): array
+    public function getQueryProfiles(?int $queryType = null, bool $showUnfinished = false): array
     {
         $queryProfiles = [];
         foreach ($this->queryProfiles as $key => $qp) {
@@ -131,7 +131,7 @@ final class Db_Profiler
         return $queryProfiles;
     }
 
-    public function getTotalElapsedSecs(int $queryType = null): float
+    public function getTotalElapsedSecs(?int $queryType = null): float
     {
         $elapsedSecs = 0;
         foreach ($this->queryProfiles as $key => $qp) {
@@ -148,7 +148,7 @@ final class Db_Profiler
         return $elapsedSecs;
     }
 
-    public function getTotalNumQueries(int $queryType = null): int
+    public function getTotalNumQueries(?int $queryType = null): int
     {
         if (null === $queryType) {
             return \count($this->queryProfiles);
