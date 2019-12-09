@@ -53,12 +53,12 @@ final class PdoTest extends TestCase
         ]);
 
         self::assertIsString($dsn);
-        self::assertContains(DB_SQL_HOST, $dsn);
-        self::assertNotContains(DB_SQL_PORT, $dsn);
-        self::assertContains('9999', $dsn);
-        self::assertContains('my_database', $dsn);
-        self::assertContains('my_socket', $dsn);
-        self::assertNotContains('my_option', $dsn);
+        self::assertStringContainsString(DB_SQL_HOST, $dsn);
+        self::assertStringNotContainsString(DB_SQL_PORT, $dsn);
+        self::assertStringContainsString('9999', $dsn);
+        self::assertStringContainsString('my_database', $dsn);
+        self::assertStringContainsString('my_socket', $dsn);
+        self::assertStringNotContainsString('my_option', $dsn);
     }
 
     public function testBaseQueries(): void
@@ -94,7 +94,9 @@ final class PdoTest extends TestCase
         self::assertInstanceOf(Db_PdoStatement::class, $stmt);
         self::assertSame(1, $stmt->rowCount());
 
-        $updatedUser = $this->pdo->query('SELECT id, name FROM user')->fetch();
+        $stmt = $this->pdo->query('SELECT id, name FROM user');
+        self::assertInstanceOf(Db_PdoStatement::class, $stmt);
+        $updatedUser = $stmt->fetch();
 
         self::assertSame($user['id'], $updatedUser['id']);
         self::assertSame('Alice', $updatedUser['name']);
@@ -115,7 +117,10 @@ final class PdoTest extends TestCase
         ]);
         $this->pdo->commit();
 
-        $users = $this->pdo->query('SELECT id, name FROM user')->fetchAll();
+        $stmt = $this->pdo->query('SELECT id, name FROM user');
+        self::assertInstanceOf(Db_PdoStatement::class, $stmt);
+        $users = $stmt->fetchAll();
+        self::assertIsIterable($users);
         self::assertCount(1, $users);
 
         $this->pdo->beginTransaction();
@@ -124,7 +129,10 @@ final class PdoTest extends TestCase
         ]);
         $this->pdo->rollBack();
 
-        $users = $this->pdo->query('SELECT id, name FROM user')->fetchAll();
+        $stmt = $this->pdo->query('SELECT id, name FROM user');
+        self::assertInstanceOf(Db_PdoStatement::class, $stmt);
+        $users = $stmt->fetchAll();
+        self::assertIsIterable($users);
         self::assertCount(1, $users);
     }
 

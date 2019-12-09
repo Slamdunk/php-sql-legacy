@@ -29,6 +29,12 @@ final class Db_Pdo extends PDO
      */
     private $profiler;
 
+    /**
+     * @param string                        $dsn
+     * @param string                        $username
+     * @param string                        $password
+     * @param array<int|string, int|string> $driver_options
+     */
     public function __construct($dsn, $username = '', $password = '', $driver_options = [])
     {
         $original_driver_options = $driver_options;
@@ -43,7 +49,7 @@ final class Db_Pdo extends PDO
 
         $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
 
-        if (! empty($driver_options['connection_charset'])) {
+        if (isset($driver_options['connection_charset']) && \is_string($driver_options['connection_charset'])) {
             $driver_options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $driver_options['connection_charset'];
             unset($driver_options['connection_charset']);
         }
@@ -127,6 +133,11 @@ final class Db_Pdo extends PDO
         return $this->profiler;
     }
 
+    /**
+     * @param string $statement
+     *
+     * @return false|int
+     */
     public function exec($statement)
     {
         $q   = $this->getProfiler()->queryStart($statement);
@@ -136,9 +147,10 @@ final class Db_Pdo extends PDO
         return $int;
     }
 
-    public function query(string $statement, array $binds = [])
+    public function query(string $statement, array $binds = []): Db_PdoStatement
     {
         // Needed for profiler
+        /** @var Db_PdoStatement $stmt */
         $stmt = $this->prepare($statement);
         $stmt->execute($binds);
 

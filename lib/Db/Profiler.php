@@ -15,7 +15,7 @@ final class Db_Profiler
     public const IGNORED     = 'ignored';
 
     /**
-     * @var array
+     * @var array<string, int>
      */
     private static $map = [
         'insert' => self::INSERT,
@@ -39,14 +39,14 @@ final class Db_Profiler
         return $this->enabled;
     }
 
-    public function setEnabled(bool $enabled)
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 
         return $this;
     }
 
-    public function clear()
+    public function clear(): self
     {
         $this->queryProfiles = [];
 
@@ -62,10 +62,10 @@ final class Db_Profiler
         return \key($this->queryProfiles);
     }
 
-    public function queryStart(string $queryText, ?int $queryType = null)
+    public function queryStart(string $queryText, ?int $queryType = null): ?int
     {
         if (! $this->enabled) {
-            return;
+            return null;
         }
 
         if (null === $queryType) {
@@ -83,7 +83,7 @@ final class Db_Profiler
         return \key($this->queryProfiles);
     }
 
-    public function queryEnd($queryId): string
+    public function queryEnd(?int $queryId): string
     {
         if (! $this->enabled) {
             return self::IGNORED;
@@ -113,6 +113,9 @@ final class Db_Profiler
         return $this->queryProfiles[$queryId];
     }
 
+    /**
+     * @return array<int, Db_ProfilerQuery>
+     */
     public function getQueryProfiles(?int $queryType = null, bool $showUnfinished = false): array
     {
         $queryProfiles = [];
@@ -164,6 +167,9 @@ final class Db_Profiler
         return $numQueries;
     }
 
+    /**
+     * @return bool|mixed
+     */
     public function getLastQueryProfile()
     {
         if (empty($this->queryProfiles)) {
