@@ -96,7 +96,7 @@ final class Db_Pdo extends PDO
             $dbParams                    = self::$currentSharedInstance->dbParams;
             self::$currentSharedInstance = null;
 
-            self::setInstance(new self(
+            return self::setInstance(new self(
                 $dbParams['dsn'],
                 $dbParams['username'],
                 $dbParams['password'],

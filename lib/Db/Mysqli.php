@@ -45,9 +45,9 @@ final class Db_Mysqli
     public static $enableProfiling = false;
 
     /**
-     * @var array
+     * @var null|array
      */
-    public $Record = [];
+    public $Record;
 
     /**
      * @var null|mysqli
@@ -93,6 +93,7 @@ final class Db_Mysqli
     public function getConnection(): mysqli
     {
         $this->connect();
+        \assert(self::$mysqli instanceof mysqli);
 
         return self::$mysqli;
     }
@@ -103,6 +104,7 @@ final class Db_Mysqli
     public function escape($string): string
     {
         $this->connect();
+        \assert(self::$mysqli instanceof mysqli);
 
         return self::$mysqli->real_escape_string((string) $string);
     }
@@ -136,6 +138,7 @@ final class Db_Mysqli
     public function query(string $query)
     {
         $this->connect();
+        \assert(self::$mysqli instanceof mysqli);
 
         if ($this->mysqli_result) {
             $this->free();
@@ -204,6 +207,7 @@ final class Db_Mysqli
     public function affected_rows(): int
     {
         $this->connect();
+        \assert(self::$mysqli instanceof mysqli);
 
         return self::$mysqli->affected_rows;
     }
@@ -224,6 +228,7 @@ final class Db_Mysqli
     public function f($Name)
     {
         $this->connect();
+        \assert(\is_array($this->Record));
 
         return $this->Record[$Name];
     }
@@ -260,6 +265,7 @@ final class Db_Mysqli
     public function last_insert_id()
     {
         $this->connect();
+        \assert(self::$mysqli instanceof mysqli);
 
         return self::$mysqli->insert_id;
     }

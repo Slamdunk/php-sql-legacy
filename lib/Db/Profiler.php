@@ -58,8 +58,10 @@ final class Db_Profiler
         $this->queryProfiles[] = clone $query;
 
         \end($this->queryProfiles);
+        $key = \key($this->queryProfiles);
+        \assert(\is_int($key));
 
-        return \key($this->queryProfiles);
+        return $key;
     }
 
     public function queryStart(string $queryText, ?int $queryType = null): ?int
@@ -168,7 +170,7 @@ final class Db_Profiler
     }
 
     /**
-     * @return bool|mixed
+     * @return bool|Db_ProfilerQuery
      */
     public function getLastQueryProfile()
     {
