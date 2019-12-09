@@ -4,21 +4,32 @@ declare(strict_types=1);
 
 final class Db_PdoStatement extends PDOStatement
 {
+    /**
+     * @var Db_Pdo
+     */
     protected $adapter;
 
+    /**
+     * @var null|int
+     */
     protected $queryId;
 
-    protected function __construct($adapter, $fetchMode = '')
+    protected function __construct(Db_Pdo $adapter, ?int $fetchMode = null)
     {
         $this->adapter = $adapter;
 
-        if (! empty($fetchMode)) {
+        if (null !== $fetchMode) {
             $this->setFetchMode($fetchMode);
         }
 
         $this->queryId = $this->adapter->getProfiler()->queryStart($this->queryString);
     }
 
+    /**
+     * @param null|array<int|string, mixed> $bound_input_params
+     *
+     * @return bool
+     */
     public function execute($bound_input_params = null)
     {
         if (null === $this->queryId) {
@@ -37,7 +48,7 @@ final class Db_PdoStatement extends PDOStatement
             $qp->bindParams($bound_input_params);
         }
 
-        $qp->start($this->queryId);
+        $qp->start();
 
         $retval = parent::execute($bound_input_params);
 

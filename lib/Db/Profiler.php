@@ -15,7 +15,7 @@ final class Db_Profiler
     public const IGNORED     = 'ignored';
 
     /**
-     * @var array
+     * @var array<string, int>
      */
     private static $map = [
         'insert' => self::INSERT,
@@ -39,14 +39,14 @@ final class Db_Profiler
         return $this->enabled;
     }
 
-    public function setEnabled(bool $enabled)
+    public function setEnabled(bool $enabled): self
     {
         $this->enabled = $enabled;
 
         return $this;
     }
 
-    public function clear()
+    public function clear(): self
     {
         $this->queryProfiles = [];
 
@@ -58,14 +58,16 @@ final class Db_Profiler
         $this->queryProfiles[] = clone $query;
 
         \end($this->queryProfiles);
+        $key = \key($this->queryProfiles);
+        \assert(\is_int($key));
 
-        return \key($this->queryProfiles);
+        return $key;
     }
 
-    public function queryStart(string $queryText, int $queryType = null)
+    public function queryStart(string $queryText, ?int $queryType = null): ?int
     {
         if (! $this->enabled) {
-            return;
+            return null;
         }
 
         if (null === $queryType) {
@@ -83,7 +85,7 @@ final class Db_Profiler
         return \key($this->queryProfiles);
     }
 
-    public function queryEnd($queryId): string
+    public function queryEnd(?int $queryId): string
     {
         if (! $this->enabled) {
             return self::IGNORED;
@@ -113,7 +115,10 @@ final class Db_Profiler
         return $this->queryProfiles[$queryId];
     }
 
-    public function getQueryProfiles(int $queryType = null, bool $showUnfinished = false): array
+    /**
+     * @return array<int, Db_ProfilerQuery>
+     */
+    public function getQueryProfiles(?int $queryType = null, bool $showUnfinished = false): array
     {
         $queryProfiles = [];
         foreach ($this->queryProfiles as $key => $qp) {
@@ -131,7 +136,7 @@ final class Db_Profiler
         return $queryProfiles;
     }
 
-    public function getTotalElapsedSecs(int $queryType = null): float
+    public function getTotalElapsedSecs(?int $queryType = null): float
     {
         $elapsedSecs = 0;
         foreach ($this->queryProfiles as $key => $qp) {
@@ -148,7 +153,7 @@ final class Db_Profiler
         return $elapsedSecs;
     }
 
-    public function getTotalNumQueries(int $queryType = null): int
+    public function getTotalNumQueries(?int $queryType = null): int
     {
         if (null === $queryType) {
             return \count($this->queryProfiles);
@@ -164,6 +169,9 @@ final class Db_Profiler
         return $numQueries;
     }
 
+    /**
+     * @return bool|Db_ProfilerQuery
+     */
     public function getLastQueryProfile()
     {
         if (empty($this->queryProfiles)) {

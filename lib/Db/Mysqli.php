@@ -4,22 +4,62 @@ declare(strict_types=1);
 
 final class Db_Mysqli
 {
+    /**
+     * @var string
+     */
     public static $Host;
+
+    /**
+     * @var int
+     */
     public static $Port;
+
+    /**
+     * @var string
+     */
     public static $Socket;
+
+    /**
+     * @var string
+     */
     public static $Database;
+
+    /**
+     * @var string
+     */
     public static $User;
+
+    /**
+     * @var string
+     */
     public static $Password;
+
+    /**
+     * @var string
+     */
     public static $Connection_Charset;
 
+    /**
+     * @var bool
+     */
     public static $enableProfiling = false;
 
-    public $Record = [];
+    /**
+     * @var null|array
+     */
+    public $Record;
 
-    private static $mysqli  = null;
+    /**
+     * @var null|mysqli
+     */
+    private static $mysqli;
+
+    /**
+     * @var null|bool|mysqli_result
+     */
     private $mysqli_result;
 
-    private function connect()
+    private function connect(): void
     {
         if (null !== self::$mysqli) {
             return;
@@ -40,7 +80,7 @@ final class Db_Mysqli
         self::$mysqli->real_query('SET CHARACTER SET "' . self::$Connection_Charset . '"');
     }
 
-    public static function resetInstance()
+    public static function resetInstance(): void
     {
         if (null === self::$mysqli) {
             return;
@@ -53,17 +93,25 @@ final class Db_Mysqli
     public function getConnection(): mysqli
     {
         $this->connect();
+        \assert(self::$mysqli instanceof mysqli);
 
         return self::$mysqli;
     }
 
+    /**
+     * @param mixed $string
+     */
     public function escape($string): string
     {
         $this->connect();
+        \assert(self::$mysqli instanceof mysqli);
 
         return self::$mysqli->real_escape_string((string) $string);
     }
 
+    /**
+     * @return null|bool|mysqli_result
+     */
     public function query_id()
     {
         $this->connect();
@@ -84,9 +132,13 @@ final class Db_Mysqli
         return $this;
     }
 
+    /**
+     * @return null|bool|mysqli_result
+     */
     public function query(string $query)
     {
         $this->connect();
+        \assert(self::$mysqli instanceof mysqli);
 
         if ($this->mysqli_result) {
             $this->free();
@@ -133,11 +185,11 @@ final class Db_Mysqli
         return $this->mysqli_result;
     }
 
-    public function next_record()
+    public function next_record(): bool
     {
         $this->connect();
 
-        if (null === $this->mysqli_result) {
+        if (! $this->mysqli_result instanceof mysqli_result) {
             throw new Db_Exception('No query active for next_record()');
         }
 
@@ -155,6 +207,7 @@ final class Db_Mysqli
     public function affected_rows(): int
     {
         $this->connect();
+        \assert(self::$mysqli instanceof mysqli);
 
         return self::$mysqli->affected_rows;
     }
@@ -162,25 +215,35 @@ final class Db_Mysqli
     public function num_rows(): int
     {
         $this->connect();
+        \assert($this->mysqli_result instanceof mysqli_result);
 
         return $this->mysqli_result->num_rows;
     }
 
+    /**
+     * @param mixed $Name
+     *
+     * @return mixed
+     */
     public function f($Name)
     {
         $this->connect();
+        \assert(\is_array($this->Record));
 
         return $this->Record[$Name];
     }
 
-    public function metadata(string $table)
+    public function metadata(string $table): array
     {
         $this->connect();
 
         $id = $this->query('SELECT * FROM ' . $table . ' WHERE FALSE');
+        \assert($id instanceof mysqli_result);
+        $fields = $id->fetch_fields();
+        \assert(\is_iterable($fields));
 
         $result = [];
-        foreach ($id->fetch_fields() as $field) {
+        foreach ($fields as $field) {
             // For the flags see MYSQLI_*_FLAG constants
             $result[] = [
                 'table'     => $field->table,
@@ -196,9 +259,13 @@ final class Db_Mysqli
         return $result;
     }
 
+    /**
+     * @return mixed
+     */
     public function last_insert_id()
     {
         $this->connect();
+        \assert(self::$mysqli instanceof mysqli);
 
         return self::$mysqli->insert_id;
     }

@@ -4,14 +4,29 @@ declare(strict_types=1);
 
 final class Db_ProfilerQuery
 {
+    /**
+     * @var string
+     */
     private $query;
 
+    /**
+     * @var int
+     */
     private $queryType;
 
+    /**
+     * @var float
+     */
     private $startedMicrotime;
 
+    /**
+     * @var null|float
+     */
     private $endedMicrotime;
 
+    /**
+     * @var array<int|string, mixed>
+     */
     private $boundParams = [];
 
     public function __construct(string $query, int $queryType)
@@ -30,12 +45,12 @@ final class Db_ProfilerQuery
         $this->start();
     }
 
-    public function start()
+    public function start(): void
     {
         $this->startedMicrotime = \microtime(true);
     }
 
-    public function end()
+    public function end(): void
     {
         $this->endedMicrotime = \microtime(true);
     }
@@ -55,12 +70,19 @@ final class Db_ProfilerQuery
         return $this->queryType;
     }
 
-    public function bindParam($param, $variable)
+    /**
+     * @param int|string $param
+     * @param mixed      $variable
+     */
+    public function bindParam($param, $variable): void
     {
         $this->boundParams[$param] = $variable;
     }
 
-    public function bindParams(array $params)
+    /**
+     * @param array<int|string, mixed> $params
+     */
+    public function bindParams(array $params): void
     {
         if (\array_key_exists(0, $params)) {
             \array_unshift($params, null);
@@ -71,11 +93,17 @@ final class Db_ProfilerQuery
         }
     }
 
+    /**
+     * @return array<int|string, mixed>
+     */
     public function getQueryParams(): array
     {
         return $this->boundParams;
     }
 
+    /**
+     * @return bool|float
+     */
     public function getElapsedSecs()
     {
         if (null === $this->endedMicrotime) {

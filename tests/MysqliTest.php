@@ -13,9 +13,12 @@ use PHPUnit\Framework\TestCase;
 
 final class MysqliTest extends TestCase
 {
+    /**
+     * @var Db_Mysqli
+     */
     private $db;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $parameters = [
             'Host'                   => '',
@@ -47,7 +50,7 @@ final class MysqliTest extends TestCase
         $this->db = new Db_Mysqli();
     }
 
-    public function testRaiseExceptionWithWrongCredentials()
+    public function testRaiseExceptionWithWrongCredentials(): void
     {
         Db_Mysqli::resetInstance();
         Db_Mysqli::$Password = \uniqid('wrong_password_');
@@ -59,40 +62,40 @@ final class MysqliTest extends TestCase
         $db->getConnection();
     }
 
-    public function testHasAMysqliConnection()
+    public function testHasAMysqliConnection(): void
     {
-        static::assertInstanceOf(mysqli::class, $this->db->getConnection());
+        self::assertInstanceOf(mysqli::class, $this->db->getConnection());
     }
 
-    public function testEscape()
+    public function testEscape(): void
     {
         $string = '"';
 
-        static::assertNotSame($string, $this->db->escape($string));
+        self::assertNotSame($string, $this->db->escape($string));
 
-        static::assertSame('1', $this->db->escape(1));
-        static::assertSame('A', $this->db->escape('A'));
+        self::assertSame('1', $this->db->escape(1));
+        self::assertSame('A', $this->db->escape('A'));
     }
 
-    public function testRaiseExceptionOnAWrongQueryAndReportQuery()
+    public function testRaiseExceptionOnAWrongQueryAndReportQuery(): void
     {
         $query = \sprintf('SELECT 1 FROM %s', \uniqid('non_existing_table_'));
 
         try {
             $this->db->query($query);
-            static::fail('No Db_Exception thrown');
+            self::fail('No Db_Exception thrown');
         } catch (Db_Exception $dbException) {
-            static::assertContains($query, $dbException->getMessage());
+            self::assertContains($query, $dbException->getMessage());
 
             $previousException = $dbException->getPrevious();
 
-            static::assertInstanceOf(mysqli_sql_exception::class, $previousException);
+            self::assertInstanceOf(mysqli_sql_exception::class, $previousException);
         }
     }
 
-    public function testNormalQueryBehaviours()
+    public function testNormalQueryBehaviours(): void
     {
-        static::assertFalse(Db_Mysqli::$enableProfiling);
+        self::assertFalse(Db_Mysqli::$enableProfiling);
 
         Db_Mysqli::$enableProfiling = true;
 
@@ -106,23 +109,23 @@ final class MysqliTest extends TestCase
 
         $result = $this->db->query('INSERT INTO query_test (id, name) VALUES (1, "a"), (9, "b")');
 
-        static::assertArrayHasKey('queries', $GLOBALS);
+        self::assertArrayHasKey('queries', $GLOBALS);
 
         Db_Mysqli::$enableProfiling = false;
 
-        static::assertTrue($result);
-        static::assertSame(2, $this->db->affected_rows());
-        static::assertSame(9, $this->db->last_insert_id());
+        self::assertTrue($result);
+        self::assertSame(2, $this->db->affected_rows());
+        self::assertSame(9, $this->db->last_insert_id());
 
         $stmt = $this->db->query('SELECT id, name FROM query_test');
 
-        static::assertInstanceOf(mysqli_result::class, $stmt);
-        static::assertSame($stmt, $this->db->query_id());
-        static::assertSame(2, $this->db->num_rows());
+        self::assertInstanceOf(mysqli_result::class, $stmt);
+        self::assertSame($stmt, $this->db->query_id());
+        self::assertSame(2, $this->db->num_rows());
 
         $values = [];
         while ($this->db->next_record()) {
-            static::assertIsString($this->db->f('id'));
+            self::assertIsString($this->db->f('id'));
 
             $values[] = $this->db->Record;
         }
@@ -138,14 +141,14 @@ final class MysqliTest extends TestCase
             ],
         ];
 
-        static::assertSame($expected, $values);
-        static::assertNull($this->db->query_id());
+        self::assertSame($expected, $values);
+        self::assertNull($this->db->query_id());
 
         $metadata = $this->db->metadata('query_test');
-        static::assertSame('id', $metadata[0]['name']);
+        self::assertSame('id', $metadata[0]['name']);
     }
 
-    public function testCannotNextRecordWithoutQuery()
+    public function testCannotNextRecordWithoutQuery(): void
     {
         $this->expectException(Db_Exception::class);
 
