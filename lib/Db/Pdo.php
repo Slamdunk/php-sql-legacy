@@ -129,12 +129,20 @@ final class Db_Pdo extends PDO
         return $int;
     }
 
-    public function query(string $statement, array $binds = []): Db_PdoStatement
+    /**
+     * @param mixed ...$args
+     */
+    public function query(string $statement, ...$args): Db_PdoStatement
     {
         // Needed for profiler
         /** @var Db_PdoStatement $stmt */
         $stmt = $this->prepare($statement);
-        $stmt->execute($binds);
+        if (\PHP_VERSION_ID >= 80000) {
+            $fetchMode = \array_shift($args);
+            $stmt->setFetchMode($fetchMode);
+        }
+
+        $stmt->execute(...$args);
 
         return $stmt;
     }
