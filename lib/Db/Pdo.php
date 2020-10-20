@@ -137,11 +137,6 @@ final class Db_Pdo extends PDO
         // Needed for profiler
         /** @var Db_PdoStatement $stmt */
         $stmt = $this->prepare($statement);
-        if (\PHP_VERSION_ID >= 80000) {
-            $fetchMode = \array_shift($args);
-            $stmt->setFetchMode($fetchMode);
-        }
-
         $stmt->execute(...$args);
 
         return $stmt;
