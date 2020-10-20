@@ -14,10 +14,7 @@ final class Db_Profiler
     public const STORED      = 'stored';
     public const IGNORED     = 'ignored';
 
-    /**
-     * @var array<string, int>
-     */
-    private static $map = [
+    private const MAP = [
         'insert' => self::INSERT,
         'update' => self::UPDATE,
         'delete' => self::DELETE,
@@ -27,12 +24,8 @@ final class Db_Profiler
     /**
      * @var array<int, Db_ProfilerQuery>
      */
-    private $queryProfiles = [];
-
-    /**
-     * @var bool
-     */
-    private $enabled = false;
+    private array $queryProfiles = [];
+    private bool $enabled        = false;
 
     public function getEnabled(): bool
     {
@@ -73,8 +66,8 @@ final class Db_Profiler
         if (null === $queryType) {
             $queryType = self::QUERY;
             $guess     = \strtolower(\substr(\ltrim($queryText), 0, 6));
-            if (isset(self::$map[$guess])) {
-                $queryType = self::$map[$guess];
+            if (isset(self::MAP[$guess])) {
+                $queryType = self::MAP[$guess];
             }
         }
 

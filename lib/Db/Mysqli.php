@@ -4,55 +4,17 @@ declare(strict_types=1);
 
 final class Db_Mysqli
 {
-    /**
-     * @var string
-     */
-    public static $Host;
+    public static string $Host;
+    public static int $Port;
+    public static string $Socket;
+    public static string $Database;
+    public static string $User;
+    public static string $Password;
+    public static string $Connection_Charset;
+    public static bool $enableProfiling = false;
 
-    /**
-     * @var int
-     */
-    public static $Port;
-
-    /**
-     * @var string
-     */
-    public static $Socket;
-
-    /**
-     * @var string
-     */
-    public static $Database;
-
-    /**
-     * @var string
-     */
-    public static $User;
-
-    /**
-     * @var string
-     */
-    public static $Password;
-
-    /**
-     * @var string
-     */
-    public static $Connection_Charset;
-
-    /**
-     * @var bool
-     */
-    public static $enableProfiling = false;
-
-    /**
-     * @var null|array
-     */
-    public $Record;
-
-    /**
-     * @var null|mysqli
-     */
-    private static $mysqli;
+    public ?array $Record          = null;
+    private static ?mysqli $mysqli = null;
 
     /**
      * @var null|bool|mysqli_result

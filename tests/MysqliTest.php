@@ -13,39 +13,18 @@ use PHPUnit\Framework\TestCase;
 
 final class MysqliTest extends TestCase
 {
-    /**
-     * @var Db_Mysqli
-     */
-    private $db;
+    private Db_Mysqli $db;
 
     protected function setUp(): void
     {
-        $parameters = [
-            'Host'                   => '',
-            'Port'                   => 0,
-            'Socket'                 => '/var/run/mysqld/mysqld-5.6.sock',
-            'Database'               => 'tools_ci_test',
-            'User'                   => 'tools_ci',
-            'Password'               => 'tools_ci',
-            'Connection_Charset'     => 'latin1',
-        ];
-
-        if (false !== \getenv('TRAVIS')) {
-            $parameters = [
-                'Host'                   => '127.0.0.1',
-                'Port'                   => 3306,
-                'Socket'                 => '',
-                'Database'               => 'tools_ci_test',
-                'User'                   => 'root',
-                'Password'               => '',
-                'Connection_Charset'     => 'latin1',
-            ];
-        }
-
         Db_Mysqli::resetInstance();
-        foreach ($parameters as $key => $value) {
-            Db_Mysqli::${$key} = $value;
-        }
+        Db_Mysqli::$Host               = '127.0.0.1';
+        Db_Mysqli::$Port               = 3306;
+        Db_Mysqli::$Socket             = '';
+        Db_Mysqli::$Database           = 'sql_legacy';
+        Db_Mysqli::$User               = 'root';
+        Db_Mysqli::$Password           = 'root_password';
+        Db_Mysqli::$Connection_Charset = 'latin1';
 
         $this->db = new Db_Mysqli();
     }
@@ -85,7 +64,7 @@ final class MysqliTest extends TestCase
             $this->db->query($query);
             self::fail('No Db_Exception thrown');
         } catch (Db_Exception $dbException) {
-            self::assertContains($query, $dbException->getMessage());
+            self::assertStringContainsString($query, $dbException->getMessage());
 
             $previousException = $dbException->getPrevious();
 

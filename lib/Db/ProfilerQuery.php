@@ -4,30 +4,14 @@ declare(strict_types=1);
 
 final class Db_ProfilerQuery
 {
-    /**
-     * @var string
-     */
-    private $query;
-
-    /**
-     * @var int
-     */
-    private $queryType;
-
-    /**
-     * @var float
-     */
-    private $startedMicrotime;
-
-    /**
-     * @var null|float
-     */
-    private $endedMicrotime;
-
+    private string $query;
+    private int $queryType;
+    private float $startedMicrotime;
+    private ?float $endedMicrotime = null;
     /**
      * @var array<int|string, mixed>
      */
-    private $boundParams = [];
+    private array $boundParams = [];
 
     public function __construct(string $query, int $queryType)
     {
