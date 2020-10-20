@@ -4,30 +4,12 @@ declare(strict_types=1);
 
 final class Db_Pdo extends PDO
 {
-    /**
-     * @var int
-     */
-    public static $maxLifeTime = -1;
+    public static int $maxLifeTime              = -1;
+    private static ?self $currentSharedInstance = null;
+    private int $startTime;
 
-    /**
-     * @var null|self
-     */
-    private static $currentSharedInstance;
-
-    /**
-     * @var int
-     */
-    private $startTime;
-
-    /**
-     * @var array
-     */
-    private $dbParams = [];
-
-    /**
-     * @var null|Db_Profiler
-     */
-    private $profiler;
+    private array $dbParams        = [];
+    private ?Db_Profiler $profiler = null;
 
     /**
      * @param string                        $dsn
@@ -147,12 +129,15 @@ final class Db_Pdo extends PDO
         return $int;
     }
 
-    public function query(string $statement, array $binds = []): Db_PdoStatement
+    /**
+     * @param mixed ...$args
+     */
+    public function query(string $statement, ...$args): Db_PdoStatement
     {
         // Needed for profiler
         /** @var Db_PdoStatement $stmt */
         $stmt = $this->prepare($statement);
-        $stmt->execute($binds);
+        $stmt->execute(...$args);
 
         return $stmt;
     }
