@@ -10,10 +10,42 @@ parameters:
         - lib/
         - tests/
     ignoreErrors:
-        - '#Constant DB_SQL_\w+ not found#'
         -
-            message: '#Return type \(Db_Pdo\) of method Db_Pdo::(beginTransaction|commit|rollBack)#'
-            path: %currentWorkingDirectory%/lib/Db/Pdo.php
+            message: "#^Constant DB_SQL_HOST not found\\.$#"
+            count: 1
+            path: lib/Db/Pdo.php
+
         -
-            message: '#Call to static method PHPUnit\\Framework\\Assert::assertInstanceOf\(\) with .Db_ProfilerQuery. and false will always evaluate to false#'
-            path: %currentWorkingDirectory%/tests/PdoTest.php
+            message: "#^Constant DB_SQL_PORT not found\\.$#"
+            count: 1
+            path: lib/Db/Pdo.php
+
+        -
+            message: "#^Constant DB_SQL_DATABASE not found\\.$#"
+            count: 1
+            path: lib/Db/Pdo.php
+
+        -
+            message: "#^Constant DB_SQL_SOCKET not found\\.$#"
+            count: 1
+            path: lib/Db/Pdo.php
+
+        -
+            message: "#^Return type \\(mixed\\) of method Db_Pdo\\:\\:beginTransaction\\(\\) should be compatible with return type \\(bool\\) of method PDO\\:\\:beginTransaction\\(\\)$#"
+            count: 1
+            path: lib/Db/Pdo.php
+
+        -
+            message: "#^Return type \\(mixed\\) of method Db_Pdo\\:\\:commit\\(\\) should be compatible with return type \\(bool\\) of method PDO\\:\\:commit\\(\\)$#"
+            count: 1
+            path: lib/Db/Pdo.php
+
+        -
+            message: "#^Return type \\(mixed\\) of method Db_Pdo\\:\\:rollBack\\(\\) should be compatible with return type \\(bool\\) of method PDO\\:\\:rollBack\\(\\)$#"
+            count: 1
+            path: lib/Db/Pdo.php
+
+        -
+            message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Db_ProfilerQuery' and false will always evaluate to false\\.$#"
+            count: 1
+            path: tests/PdoTest.php
