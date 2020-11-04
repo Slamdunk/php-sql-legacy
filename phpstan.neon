@@ -31,17 +31,17 @@ parameters:
             path: lib/Db/Pdo.php
 
         -
-            message: "#^Return type \\(mixed\\) of method Db_Pdo\\:\\:beginTransaction\\(\\) should be compatible with return type \\(bool\\) of method PDO\\:\\:beginTransaction\\(\\)$#"
+            message: "#^Return type \\(Db_Pdo\\) of method Db_Pdo\\:\\:beginTransaction\\(\\) should be compatible with return type \\(bool\\) of method PDO\\:\\:beginTransaction\\(\\)$#"
             count: 1
             path: lib/Db/Pdo.php
 
         -
-            message: "#^Return type \\(mixed\\) of method Db_Pdo\\:\\:commit\\(\\) should be compatible with return type \\(bool\\) of method PDO\\:\\:commit\\(\\)$#"
+            message: "#^Return type \\(Db_Pdo\\) of method Db_Pdo\\:\\:commit\\(\\) should be compatible with return type \\(bool\\) of method PDO\\:\\:commit\\(\\)$#"
             count: 1
             path: lib/Db/Pdo.php
 
         -
-            message: "#^Return type \\(mixed\\) of method Db_Pdo\\:\\:rollBack\\(\\) should be compatible with return type \\(bool\\) of method PDO\\:\\:rollBack\\(\\)$#"
+            message: "#^Return type \\(Db_Pdo\\) of method Db_Pdo\\:\\:rollBack\\(\\) should be compatible with return type \\(bool\\) of method PDO\\:\\:rollBack\\(\\)$#"
             count: 1
             path: lib/Db/Pdo.php
 
