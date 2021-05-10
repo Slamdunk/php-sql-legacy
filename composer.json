@@ -18,7 +18,7 @@
         "phpstan/phpstan": "^0.12.64",
         "phpstan/phpstan-phpunit": "^0.12.17",
         "phpunit/phpunit": "^9.5.0",
-        "slam/php-cs-fixer-extensions": "^2.1.0",
+        "slam/php-cs-fixer-extensions": "^2.1.0 || ^3.0.0",
         "slam/php-debug-r": "^1.6.1",
         "slam/phpstan-extensions": "^5.1.0",
         "thecodingmachine/phpstan-strict-rules": "^0.12.1"
