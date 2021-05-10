@@ -124,7 +124,8 @@ final class Db_Mysqli
         try {
             $this->mysqli_result = self::$mysqli->query($query);
         } catch (mysqli_sql_exception $mysqliException) {
-            $message = \sprintf("%s\n\n%s",
+            $message = \sprintf(
+                "%s\n\n%s",
                 $mysqliException->getMessage(),
                 $query
             );

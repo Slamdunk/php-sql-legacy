@@ -13,15 +13,9 @@ use PHPUnit\Framework\TestCase;
 
 final class PdoTest extends TestCase
 {
-    /**
-     * @var Db_Pdo
-     */
-    private $pdo;
+    private Db_Pdo $pdo;
 
-    /**
-     * @var int
-     */
-    private $maxLifeTimeBackup;
+    private int $maxLifeTimeBackup;
 
     protected function setUp(): void
     {
