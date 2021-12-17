@@ -12,12 +12,9 @@ final class Db_Pdo extends PDO
     private ?Db_Profiler $profiler = null;
 
     /**
-     * @param string                        $dsn
-     * @param string                        $username
-     * @param string                        $password
      * @param array<int|string, int|string> $driver_options
      */
-    public function __construct($dsn, $username = '', $password = '', $driver_options = [])
+    public function __construct(string $dsn, string $username = '', string $password = '', array $driver_options = [])
     {
         $original_driver_options = $driver_options;
 
@@ -28,13 +25,6 @@ final class Db_Pdo extends PDO
                 'fetchMode' => PDO::FETCH_ASSOC,
             ],
         ];
-
-        $driver_options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-
-        if (isset($driver_options['connection_charset']) && \is_string($driver_options['connection_charset'])) {
-            $driver_options[PDO::MYSQL_ATTR_INIT_COMMAND] = 'SET NAMES ' . $driver_options['connection_charset'];
-            unset($driver_options['connection_charset']);
-        }
 
         $this->dbParams = [
             'dsn'               => $dsn,
@@ -115,12 +105,7 @@ final class Db_Pdo extends PDO
         return $this->profiler;
     }
 
-    /**
-     * @param string $statement
-     *
-     * @return false|int
-     */
-    public function exec($statement)
+    public function exec(string $statement): int|false
     {
         $q   = $this->getProfiler()->queryStart($statement);
         $int = parent::exec($statement);
@@ -178,31 +163,31 @@ final class Db_Pdo extends PDO
         return $this->query($query, \array_values($identifier));
     }
 
-    public function beginTransaction(): self
+    public function beginTransaction(): bool
     {
-        $q = $this->getProfiler()->queryStart('begin', Db_Profiler::TRANSACTION);
-        parent::beginTransaction();
+        $q      = $this->getProfiler()->queryStart('begin', Db_Profiler::TRANSACTION);
+        $result = parent::beginTransaction();
         $this->getProfiler()->queryEnd($q);
 
-        return $this;
+        return $result;
     }
 
-    public function commit(): self
+    public function commit(): bool
     {
-        $q = $this->getProfiler()->queryStart('commit', Db_Profiler::TRANSACTION);
-        parent::commit();
+        $q      = $this->getProfiler()->queryStart('commit', Db_Profiler::TRANSACTION);
+        $result = parent::commit();
         $this->getProfiler()->queryEnd($q);
 
-        return $this;
+        return $result;
     }
 
-    public function rollBack(): self
+    public function rollBack(): bool
     {
-        $q = $this->getProfiler()->queryStart('rollback', Db_Profiler::TRANSACTION);
-        parent::rollBack();
+        $q      = $this->getProfiler()->queryStart('rollback', Db_Profiler::TRANSACTION);
+        $result = parent::rollBack();
         $this->getProfiler()->queryEnd($q);
 
-        return $this;
+        return $result;
     }
 
     public function quoteIdentifier(string $str): string

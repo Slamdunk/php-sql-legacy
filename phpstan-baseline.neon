@@ -1,0 +1,27 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Constant DB_SQL_DATABASE not found\\.$#"
+			count: 1
+			path: lib/Db/Pdo.php
+
+		-
+			message: "#^Constant DB_SQL_HOST not found\\.$#"
+			count: 1
+			path: lib/Db/Pdo.php
+
+		-
+			message: "#^Constant DB_SQL_PORT not found\\.$#"
+			count: 1
+			path: lib/Db/Pdo.php
+
+		-
+			message: "#^Constant DB_SQL_SOCKET not found\\.$#"
+			count: 1
+			path: lib/Db/Pdo.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertInstanceOf\\(\\) with 'Db_ProfilerQuery' and null will always evaluate to false\\.$#"
+			count: 1
+			path: tests/PdoTest.php
+

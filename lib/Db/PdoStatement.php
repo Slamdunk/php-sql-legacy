@@ -20,10 +20,8 @@ final class Db_PdoStatement extends PDOStatement
 
     /**
      * @param null|array<int|string, mixed> $bound_input_params
-     *
-     * @return bool
      */
-    public function execute($bound_input_params = null)
+    public function execute(?array $bound_input_params = null): bool
     {
         if (null === $this->queryId) {
             return parent::execute($bound_input_params);

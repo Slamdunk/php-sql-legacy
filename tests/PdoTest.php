@@ -22,10 +22,7 @@ final class PdoTest extends TestCase
         $this->maxLifeTimeBackup = Db_Pdo::$maxLifeTime;
         Db_Pdo::resetInstance();
 
-        $this->pdo = new Db_Pdo('sqlite::memory:', '', '', [
-            'connection_charset' => 'UTF-8',
-        ]);
-
+        $this->pdo = new Db_Pdo('sqlite::memory:');
         $this->pdo->exec('CREATE TABLE user (id INTEGER PRIMARY KEY ASC, name)');
     }
 
@@ -160,7 +157,7 @@ final class PdoTest extends TestCase
         $profiler->setEnabled(true);
         self::assertTrue($profiler->getEnabled());
 
-        self::assertFalse($profiler->getLastQueryProfile());
+        self::assertNull($profiler->getLastQueryProfile());
 
         self::assertCount(0, $profiler->getQueryProfiles());
         self::assertSame((float) 0, $profiler->getTotalElapsedSecs());
