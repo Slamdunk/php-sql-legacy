@@ -11,17 +11,15 @@
         }
     ],
     "require": {
-        "php": "^7.4 || ^8.0"
+        "php": "~8.1.0"
     },
     "require-dev": {
         "malukenho/mcbumpface": "^1.1.5",
-        "phpstan/phpstan": "^0.12.86",
-        "phpstan/phpstan-phpunit": "^0.12.18",
-        "phpunit/phpunit": "^9.5.4",
-        "slam/php-cs-fixer-extensions": "^3.0.1",
-        "slam/php-debug-r": "^1.7.0",
-        "slam/phpstan-extensions": "^5.1.0",
-        "thecodingmachine/phpstan-strict-rules": "^0.12.1"
+        "phpstan/phpstan": "^1.2.0",
+        "phpstan/phpstan-phpunit": "^1.0.0",
+        "phpunit/phpunit": "^9.5.10",
+        "slam/php-cs-fixer-extensions": "^3.1.0",
+        "slam/php-debug-r": "^1.7.0"
     },
     "suggest": {
         "ext-PDO": "",

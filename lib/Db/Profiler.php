@@ -162,13 +162,10 @@ final class Db_Profiler
         return $numQueries;
     }
 
-    /**
-     * @return bool|Db_ProfilerQuery
-     */
-    public function getLastQueryProfile()
+    public function getLastQueryProfile(): ?Db_ProfilerQuery
     {
-        if (empty($this->queryProfiles)) {
-            return false;
+        if ([] === $this->queryProfiles) {
+            return null;
         }
 
         \end($this->queryProfiles);
