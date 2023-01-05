@@ -14,7 +14,6 @@
         "php": "~8.2.0"
     },
     "require-dev": {
-        "malukenho/mcbumpface": "^1.1.5",
         "phpstan/phpstan": "^1.2.0",
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpunit": "^9.5.10",
@@ -35,11 +34,6 @@
     "autoload-dev": {
         "psr-4": {
             "SlamTest\\Db\\": "tests/"
-        }
-    },
-    "extra": {
-        "mc-bumpface": {
-            "stripVersionPrefixes": true
         }
     }
 }
