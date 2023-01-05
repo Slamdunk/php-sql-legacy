@@ -133,7 +133,7 @@ jobs:
         run: "composer update --no-interaction --no-progress"
 
       - name: "Check coding standards"
-        run: "vendor/bin/php-cs-fixer fix --verbose --dry-run --diff"
+        run: make csfix arg="--ansi --show-progress=dots --dry-run"
 
   static-analysis:
     name: "Static Analysis"
