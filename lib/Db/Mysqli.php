@@ -28,7 +28,7 @@ final class Db_Mysqli
         }
 
         $driver              = new mysqli_driver();
-        $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
+        $driver->report_mode = \MYSQLI_REPORT_ERROR | \MYSQLI_REPORT_STRICT;
 
         self::$mysqli = new mysqli(
             self::$Host,
