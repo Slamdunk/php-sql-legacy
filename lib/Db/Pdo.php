@@ -192,7 +192,7 @@ final class Db_Pdo extends PDO
 
     public function quoteIdentifier(string $str): string
     {
-        if (false !== \strpos($str, '.')) {
+        if (\str_contains($str, '.')) {
             $parts = \array_map([$this, 'quoteSingleIdentifier'], \explode('.', $str));
 
             return \implode('.', $parts);

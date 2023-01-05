@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "8.1"
+          - "8.2"
 
     steps:
       - name: "Checkout"
@@ -42,11 +42,11 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "8.1"
+          - "8.2"
 
     services:
       mysql:
-        image: mariadb:10.5
+        image: mariadb:latest
         env:
           MYSQL_DATABASE: 'sql_legacy'
           MYSQL_ROOT_PASSWORD: 'root_password'
@@ -106,7 +106,7 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "8.1"
+          - "8.2"
 
     steps:
       - name: "Checkout"
@@ -133,7 +133,7 @@ jobs:
         run: "composer update --no-interaction --no-progress"
 
       - name: "Check coding standards"
-        run: "vendor/bin/php-cs-fixer fix --verbose --dry-run --diff"
+        run: make csfix arg="--ansi --show-progress=dots --dry-run"
 
   static-analysis:
     name: "Static Analysis"
@@ -143,7 +143,7 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - "8.1"
+          - "8.2"
 
     steps:
       - name: "Checkout"

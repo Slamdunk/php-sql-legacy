@@ -8,6 +8,7 @@ final class Db_ProfilerQuery
     private int $queryType;
     private float $startedMicrotime;
     private ?float $endedMicrotime = null;
+
     /**
      * @var array<int|string, mixed>
      */

@@ -167,7 +167,7 @@ final class Db_Mysqli
         return $stat;
     }
 
-    public function affected_rows(): int
+    public function affected_rows(): int|string
     {
         $this->connect();
         \assert(self::$mysqli instanceof mysqli);
@@ -175,7 +175,7 @@ final class Db_Mysqli
         return self::$mysqli->affected_rows;
     }
 
-    public function num_rows(): int
+    public function num_rows(): int|string
     {
         $this->connect();
         \assert($this->mysqli_result instanceof mysqli_result);

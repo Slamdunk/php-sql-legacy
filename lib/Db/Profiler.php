@@ -138,7 +138,7 @@ final class Db_Profiler
             } else {
                 $condition = ($qp->getQueryType() & $queryType);
             }
-            if (($qp->hasEnded()) && $condition) {
+            if ($qp->hasEnded() && $condition) {
                 $elapsedSecs += $qp->getElapsedSecs();
             }
         }
