@@ -1,4 +1,5 @@
-PHP_BIN=--env PHP_CS_FIXER_IGNORE_ENV=1 php8.2
+CSFIX_PHP_BIN=PHP_CS_FIXER_IGNORE_ENV=1 php8.2
+PHP_BIN=php8.2
 COMPOSER_BIN=$(shell command -v composer)
 
 all: csfix static-analysis test
@@ -11,7 +12,7 @@ vendor: composer.json
 
 .PHONY: csfix
 csfix: vendor
-	$(PHP_BIN) vendor/bin/php-cs-fixer fix -v ${arg}
+	$(CSFIX_PHP_BIN) vendor/bin/php-cs-fixer fix -v ${arg}
 
 .PHONY: static-analysis
 static-analysis: vendor
