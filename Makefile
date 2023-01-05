@@ -6,6 +6,7 @@ all: csfix static-analysis test
 
 vendor: composer.json
 	$(PHP_BIN) ${COMPOSER_BIN} update
+	$(PHP_BIN) ${COMPOSER_BIN} bump
 	touch vendor
 
 .PHONY: csfix
