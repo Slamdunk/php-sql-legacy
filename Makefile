@@ -12,7 +12,7 @@ vendor: composer.json
 
 .PHONY: csfix
 csfix: vendor
-	$(CSFIX_PHP_BIN) vendor/bin/php-cs-fixer fix -v ${arg}
+	$(CSFIX_PHP_BIN) vendor/bin/php-cs-fixer fix -v $(arg)
 
 .PHONY: static-analysis
 static-analysis: vendor
