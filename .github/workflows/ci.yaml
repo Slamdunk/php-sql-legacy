@@ -1,0 +1,114 @@
+name: "CI"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "master"
+
+env:
+  INI_VALUES: zend.assertions=1,error_reporting=-1
+
+jobs:
+  composer-json-lint:
+    name: "Lint composer.json"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+
+    steps:
+      - uses: "actions/checkout@v3"
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: "${{ env.INI_VALUES }}"
+          tools: composer-normalize
+      - uses: "ramsey/composer-install@v2"
+
+      - run: "composer validate --strict"
+      - run: "composer-normalize --dry-run"
+
+  tests:
+    name: "Tests"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+
+    services:
+      mysql:
+        image: mariadb:latest
+        env:
+          MYSQL_DATABASE: 'sql_legacy'
+          MYSQL_ROOT_PASSWORD: 'root_password'
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - uses: "actions/checkout@v3"
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "pcov"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: "${{ env.INI_VALUES }}"
+      - uses: "ramsey/composer-install@v2"
+
+      - name: "Wait for MySQL to be ready"
+        run: |
+          until mysql --host=127.0.0.1 --port=3306 --user=root --password=root_password &> /dev/null
+          do
+            printf "."
+            sleep 1
+          done
+
+      - run: "vendor/bin/phpunit --no-coverage --coverage-clover=coverage.xml"
+        timeout-minutes: 3
+
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          fail_ci_if_error: true
+
+  coding-standards:
+    name: "Coding Standards"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+
+    steps:
+      - uses: "actions/checkout@v3"
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: "${{ env.INI_VALUES }}"
+      - uses: "ramsey/composer-install@v2"
+
+      - run: "make csfix arg='--ansi --show-progress=dots --dry-run'"
+
+  static-analysis:
+    name: "Static Analysis"
+    runs-on: "ubuntu-latest"
+    strategy:
+      matrix:
+        php-version:
+          - "8.2"
+
+    steps:
+      - uses: "actions/checkout@v3"
+      - uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "${{ matrix.php-version }}"
+          ini-values: "${{ env.INI_VALUES }}"
+      - uses: "ramsey/composer-install@v2"
+
+      - run: "make static-analysis PHPSTAN_ARGS='--no-progress --error-format=github'"

@@ -114,10 +114,7 @@ final class Db_Pdo extends PDO
         return $int;
     }
 
-    /**
-     * @param mixed ...$args
-     */
-    public function query(string $statement, ...$args): Db_PdoStatement
+    public function query(string $statement, mixed ...$args): Db_PdoStatement
     {
         // Needed for profiler
         /** @var Db_PdoStatement $stmt */

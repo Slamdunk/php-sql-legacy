@@ -55,11 +55,7 @@ final class Db_ProfilerQuery
         return $this->queryType;
     }
 
-    /**
-     * @param int|string $param
-     * @param mixed      $variable
-     */
-    public function bindParam($param, $variable): void
+    public function bindParam(int|string $param, mixed $variable): void
     {
         $this->boundParams[$param] = $variable;
     }
@@ -86,10 +82,7 @@ final class Db_ProfilerQuery
         return $this->boundParams;
     }
 
-    /**
-     * @return bool|float
-     */
-    public function getElapsedSecs()
+    public function getElapsedSecs(): float|bool|null
     {
         if (null === $this->endedMicrotime) {
             return false;

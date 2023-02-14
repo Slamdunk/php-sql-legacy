@@ -16,7 +16,7 @@ csfix: vendor
 
 .PHONY: static-analysis
 static-analysis: vendor
-	$(PHP_BIN) vendor/bin/phpstan analyse
+	$(PHP_BIN) vendor/bin/phpstan analyse $(PHPSTAN_ARGS)
 
 .PHONY: test
 test: vendor

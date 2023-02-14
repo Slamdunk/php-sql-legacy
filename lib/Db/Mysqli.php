@@ -16,10 +16,7 @@ final class Db_Mysqli
     public ?array $Record          = null;
     private static ?mysqli $mysqli = null;
 
-    /**
-     * @var null|bool|mysqli_result
-     */
-    private $mysqli_result;
+    private null|bool|mysqli_result $mysqli_result = null;
 
     private function connect(): void
     {
@@ -60,10 +57,7 @@ final class Db_Mysqli
         return self::$mysqli;
     }
 
-    /**
-     * @param mixed $string
-     */
-    public function escape($string): string
+    public function escape(mixed $string): string
     {
         $this->connect();
         \assert(self::$mysqli instanceof mysqli);
@@ -71,10 +65,7 @@ final class Db_Mysqli
         return self::$mysqli->real_escape_string((string) $string);
     }
 
-    /**
-     * @return null|bool|mysqli_result
-     */
-    public function query_id()
+    public function query_id(): null|bool|mysqli_result
     {
         $this->connect();
 
@@ -94,10 +85,7 @@ final class Db_Mysqli
         return $this;
     }
 
-    /**
-     * @return null|bool|mysqli_result
-     */
-    public function query(string $query)
+    public function query(string $query): null|bool|mysqli_result
     {
         $this->connect();
         \assert(self::$mysqli instanceof mysqli);
@@ -183,12 +171,7 @@ final class Db_Mysqli
         return $this->mysqli_result->num_rows;
     }
 
-    /**
-     * @param mixed $Name
-     *
-     * @return mixed
-     */
-    public function f($Name)
+    public function f(mixed $Name): mixed
     {
         $this->connect();
         \assert(\is_array($this->Record));
@@ -222,10 +205,7 @@ final class Db_Mysqli
         return $result;
     }
 
-    /**
-     * @return mixed
-     */
-    public function last_insert_id()
+    public function last_insert_id(): int|string
     {
         $this->connect();
         \assert(self::$mysqli instanceof mysqli);
