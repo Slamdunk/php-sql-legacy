@@ -2,9 +2,8 @@
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-        bootstrap="./vendor/autoload.php"
         colors="true"
-        verbose="true"
+        cacheDirectory=".phpunit.cache"
 >
   <coverage>
     <include>
@@ -12,6 +11,8 @@
     </include>
     <report>
       <text outputFile="php://stdout" showOnlySummary="true"/>
+      <html outputDirectory="coverage/html"/>
+      <xml outputDirectory="coverage/xml"/>
     </report>
   </coverage>
   <testsuite name="Db">
