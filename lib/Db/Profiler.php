@@ -21,9 +21,7 @@ final class Db_Profiler
         'select' => self::SELECT,
     ];
 
-    /**
-     * @var array<int, Db_ProfilerQuery>
-     */
+    /** @var array<int, Db_ProfilerQuery> */
     private array $queryProfiles = [];
     private bool $enabled        = false;
 
@@ -108,9 +106,7 @@ final class Db_Profiler
         return $this->queryProfiles[$queryId];
     }
 
-    /**
-     * @return array<int, Db_ProfilerQuery>
-     */
+    /** @return array<int, Db_ProfilerQuery> */
     public function getQueryProfiles(?int $queryType = null, bool $showUnfinished = false): array
     {
         $queryProfiles = [];

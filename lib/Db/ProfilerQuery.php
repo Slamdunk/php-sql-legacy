@@ -9,9 +9,7 @@ final class Db_ProfilerQuery
     private float $startedMicrotime;
     private ?float $endedMicrotime = null;
 
-    /**
-     * @var array<int|string, mixed>
-     */
+    /** @var array<int|string, mixed> */
     private array $boundParams = [];
 
     public function __construct(string $query, int $queryType)
@@ -60,9 +58,7 @@ final class Db_ProfilerQuery
         $this->boundParams[$param] = $variable;
     }
 
-    /**
-     * @param array<int|string, mixed> $params
-     */
+    /** @param array<int|string, mixed> $params */
     public function bindParams(array $params): void
     {
         if (\array_key_exists(0, $params)) {
@@ -74,9 +70,7 @@ final class Db_ProfilerQuery
         }
     }
 
-    /**
-     * @return array<int|string, mixed>
-     */
+    /** @return array<int|string, mixed> */
     public function getQueryParams(): array
     {
         return $this->boundParams;

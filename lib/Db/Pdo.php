@@ -11,9 +11,7 @@ final class Db_Pdo extends PDO
     private array $dbParams        = [];
     private ?Db_Profiler $profiler = null;
 
-    /**
-     * @param array<int|string, int|string> $driver_options
-     */
+    /** @param array<int|string, int|string> $driver_options */
     public function __construct(string $dsn, string $username = '', string $password = '', array $driver_options = [])
     {
         $original_driver_options = $driver_options;

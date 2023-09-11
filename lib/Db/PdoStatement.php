@@ -18,9 +18,7 @@ final class Db_PdoStatement extends PDOStatement
         $this->queryId = $this->adapter->getProfiler()->queryStart($this->queryString);
     }
 
-    /**
-     * @param null|array<int|string, mixed> $bound_input_params
-     */
+    /** @param null|array<int|string, mixed> $bound_input_params */
     public function execute(?array $bound_input_params = null): bool
     {
         if (null === $this->queryId) {
