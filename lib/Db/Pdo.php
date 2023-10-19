@@ -103,7 +103,7 @@ final class Db_Pdo extends PDO
         return $this->profiler;
     }
 
-    public function exec(string $statement): int|false
+    public function exec(string $statement): false|int
     {
         $q   = $this->getProfiler()->queryStart($statement);
         $int = parent::exec($statement);
