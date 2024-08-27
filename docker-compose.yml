@@ -1,0 +1,21 @@
+
+services:
+  php:
+    build:
+      context: .
+      args:
+        USER_ID: ${USER_ID}
+        GROUP_ID: ${GROUP_ID}
+    volumes:
+      - .:${PWD}
+    working_dir: ${PWD}
+    links:
+      - database
+    depends_on:
+      - database
+
+  database:
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: sql_legacy

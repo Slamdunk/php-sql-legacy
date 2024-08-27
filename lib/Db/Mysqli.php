@@ -124,7 +124,7 @@ final class Db_Mysqli
         // The "$driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;"
         // should ensure that a "mysqli_sql_exception" is always raised in case of failure
         // but the documentation is not clear about if it occurs on EVERY failure.
-        // As of yet no test covers this because I never found a false returned without exception
+        // Yet no test covers this because I never found a false returned without exception
         if (false === $this->mysqli_result) {
             throw new Db_Exception(\sprintf("The following query returned false:\n\n%s", $query));
         }
@@ -144,7 +144,9 @@ final class Db_Mysqli
             throw new Db_Exception('No query active for next_record()');
         }
 
-        $this->Record = $this->mysqli_result->fetch_assoc();
+        $Record = $this->mysqli_result->fetch_assoc();
+        \assert(false !== $Record);
+        $this->Record = $Record;
 
         $stat = \is_array($this->Record);
 

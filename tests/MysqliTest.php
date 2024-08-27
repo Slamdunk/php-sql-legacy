@@ -18,7 +18,7 @@ final class MysqliTest extends TestCase
     protected function setUp(): void
     {
         Db_Mysqli::resetInstance();
-        Db_Mysqli::$Host               = '127.0.0.1';
+        Db_Mysqli::$Host               = false !== \getenv('CI') ? '127.0.0.1' : 'database';
         Db_Mysqli::$Port               = 3306;
         Db_Mysqli::$Socket             = '';
         Db_Mysqli::$Database           = 'sql_legacy';
