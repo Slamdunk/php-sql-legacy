@@ -85,7 +85,7 @@ final class Db_Mysqli
         return $this;
     }
 
-    public function query(string $query): null|bool|mysqli_result
+    public function query(string $query): bool|mysqli_result
     {
         $this->connect();
         \assert(self::$mysqli instanceof mysqli);
@@ -188,7 +188,6 @@ final class Db_Mysqli
         $id = $this->query('SELECT * FROM ' . $table . ' WHERE FALSE');
         \assert($id instanceof mysqli_result);
         $fields = $id->fetch_fields();
-        \assert(\is_iterable($fields));
 
         $result = [];
         foreach ($fields as $field) {

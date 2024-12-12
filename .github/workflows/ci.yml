@@ -27,7 +27,7 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           ini-values: "${{ env.INI_VALUES }}"
           tools: composer-normalize
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
 
       - run: "composer validate --strict"
       - run: "composer-normalize --dry-run"
@@ -39,6 +39,7 @@ jobs:
       matrix:
         php-version:
           - "8.3"
+          - "8.4"
 
     services:
       mysql:
@@ -56,7 +57,7 @@ jobs:
           coverage: "pcov"
           php-version: "${{ matrix.php-version }}"
           ini-values: "${{ env.INI_VALUES }}"
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
 
       - name: "Wait for MySQL to be ready"
         run: |
@@ -90,7 +91,7 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: "${{ env.INI_VALUES }}"
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
 
       - run: "make csfix arg='--ansi --show-progress=dots --dry-run'"
 
@@ -109,6 +110,6 @@ jobs:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
           ini-values: "${{ env.INI_VALUES }}"
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
 
       - run: "make static-analysis PHPSTAN_ARGS='--no-progress --error-format=github'"

@@ -76,7 +76,7 @@ final class Db_ProfilerQuery
         return $this->boundParams;
     }
 
-    public function getElapsedSecs(): null|bool|float
+    public function getElapsedSecs(): bool|float
     {
         if (null === $this->endedMicrotime) {
             return false;
