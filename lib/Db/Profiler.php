@@ -49,10 +49,8 @@ final class Db_Profiler
         $this->queryProfiles[] = clone $query;
 
         \end($this->queryProfiles);
-        $key = \key($this->queryProfiles);
-        \assert(\is_int($key));
 
-        return $key;
+        return \key($this->queryProfiles);
     }
 
     public function queryStart(string $queryText, ?int $queryType = null): ?int

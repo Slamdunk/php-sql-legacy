@@ -6,7 +6,6 @@ namespace SlamTest\Db;
 
 use Db_Exception;
 use Db_Pdo;
-use Db_PdoStatement;
 use Db_Profiler;
 use Db_ProfilerQuery;
 use PHPUnit\Framework\TestCase;
@@ -42,7 +41,6 @@ final class PdoTest extends TestCase
             'option' => 'my_option',
         ]);
 
-        self::assertIsString($dsn);
         self::assertStringContainsString(DB_SQL_HOST, $dsn);
         self::assertStringNotContainsString(DB_SQL_PORT, $dsn);
         self::assertStringContainsString('9999', $dsn);
@@ -53,22 +51,15 @@ final class PdoTest extends TestCase
 
     public function testBaseQueries(): void
     {
-        self::assertIsArray($this->pdo->getDbParams());
-
         $stmt = $this->pdo->insert('user', [
             'name' => 'Bob',
         ]);
 
-        self::assertInstanceOf(Db_PdoStatement::class, $stmt);
         self::assertSame(1, $stmt->rowCount());
 
-        $stmt = $this->pdo->query('SELECT id, name FROM user');
-
-        self::assertInstanceOf(Db_PdoStatement::class, $stmt);
-
+        $stmt  = $this->pdo->query('SELECT id, name FROM user');
         $users = $stmt->fetchAll();
 
-        self::assertIsArray($users);
         self::assertCount(1, $users);
 
         $user = \current($users);
@@ -81,11 +72,9 @@ final class PdoTest extends TestCase
             'id' => $user['id'],
         ]);
 
-        self::assertInstanceOf(Db_PdoStatement::class, $stmt);
         self::assertSame(1, $stmt->rowCount());
 
-        $stmt = $this->pdo->query('SELECT id, name FROM user');
-        self::assertInstanceOf(Db_PdoStatement::class, $stmt);
+        $stmt        = $this->pdo->query('SELECT id, name FROM user');
         $updatedUser = $stmt->fetch();
 
         self::assertSame($user['id'], $updatedUser['id']);
@@ -95,7 +84,6 @@ final class PdoTest extends TestCase
             'id' => $updatedUser['id'],
         ]);
 
-        self::assertInstanceOf(Db_PdoStatement::class, $stmt);
         self::assertSame(1, $stmt->rowCount());
     }
 
@@ -107,10 +95,8 @@ final class PdoTest extends TestCase
         ]);
         $this->pdo->commit();
 
-        $stmt = $this->pdo->query('SELECT id, name FROM user');
-        self::assertInstanceOf(Db_PdoStatement::class, $stmt);
+        $stmt  = $this->pdo->query('SELECT id, name FROM user');
         $users = $stmt->fetchAll();
-        self::assertIsIterable($users);
         self::assertCount(1, $users);
 
         $this->pdo->beginTransaction();
@@ -119,10 +105,8 @@ final class PdoTest extends TestCase
         ]);
         $this->pdo->rollBack();
 
-        $stmt = $this->pdo->query('SELECT id, name FROM user');
-        self::assertInstanceOf(Db_PdoStatement::class, $stmt);
+        $stmt  = $this->pdo->query('SELECT id, name FROM user');
         $users = $stmt->fetchAll();
-        self::assertIsIterable($users);
         self::assertCount(1, $users);
     }
 
