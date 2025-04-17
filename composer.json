@@ -14,8 +14,8 @@
         "php": "~8.3.0 || ~8.4.0"
     },
     "require-dev": {
-        "ext-PDO": "*",
         "ext-mysqli": "*",
+        "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "phpstan/phpstan": "^2.1.12",
         "phpstan/phpstan-phpunit": "^2.0.6",
@@ -24,8 +24,8 @@
         "slam/php-debug-r": "^1.10.0"
     },
     "suggest": {
-        "ext-PDO": "",
         "ext-mysqli": "",
+        "ext-pdo": "*",
         "ext-pdo_mysql": "",
         "ext-pdo_sqlite": ""
     },
