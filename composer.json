@@ -17,7 +17,7 @@
         "ext-mysqli": "*",
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
-        "phpstan/phpstan": "^2.1.17",
+        "phpstan/phpstan": "^2.1.18",
         "phpstan/phpstan-phpunit": "^2.0.6",
         "phpunit/phpunit": "^12.2.7",
         "slam/php-cs-fixer-extensions": "^3.12.0",
