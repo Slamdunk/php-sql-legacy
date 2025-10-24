@@ -16,7 +16,7 @@ final class Db_Mysqli
     public ?array $Record          = null;
     private static ?mysqli $mysqli = null;
 
-    private null|bool|mysqli_result $mysqli_result = null;
+    private bool|mysqli_result|null $mysqli_result = null;
 
     private function connect(): void
     {
@@ -65,7 +65,7 @@ final class Db_Mysqli
         return self::$mysqli->real_escape_string((string) $string);
     }
 
-    public function query_id(): null|bool|mysqli_result
+    public function query_id(): bool|mysqli_result|null
     {
         $this->connect();
 
