@@ -20,7 +20,7 @@ jobs:
           - "8.4"
 
     steps:
-      - uses: "actions/checkout@v5"
+      - uses: "actions/checkout@v6"
       - uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
@@ -51,7 +51,7 @@ jobs:
           - 3306:3306
 
     steps:
-      - uses: "actions/checkout@v5"
+      - uses: "actions/checkout@v6"
       - uses: "shivammathur/setup-php@v2"
         with:
           coverage: "pcov"
@@ -85,7 +85,7 @@ jobs:
           - "8.4"
 
     steps:
-      - uses: "actions/checkout@v5"
+      - uses: "actions/checkout@v6"
       - uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
@@ -104,7 +104,7 @@ jobs:
           - "8.4"
 
     steps:
-      - uses: "actions/checkout@v5"
+      - uses: "actions/checkout@v6"
       - uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
