@@ -18,8 +18,8 @@
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "phpstan/phpstan": "^2.1.38",
-        "phpstan/phpstan-phpunit": "^2.0.13",
-        "phpunit/phpunit": "^12.5.10",
+        "phpstan/phpstan-phpunit": "^2.0.14",
+        "phpunit/phpunit": "^12.5.11",
         "slam/php-cs-fixer-extensions": "^3.14.0",
         "slam/php-debug-r": "^1.11.0"
     },
