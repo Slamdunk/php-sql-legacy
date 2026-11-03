@@ -67,14 +67,8 @@ jobs:
             sleep 1
           done
 
-      - run: "vendor/bin/phpunit --no-coverage --coverage-clover=coverage.xml"
+      - run: "vendor/bin/phpunit"
         timeout-minutes: 3
-
-      - uses: codecov/codecov-action@v7
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
-          fail_ci_if_error: true
 
   coding-standards:
     name: "Coding Standards"
