@@ -80,7 +80,7 @@ final class Db_Profiler
             return self::IGNORED;
         }
 
-        if (! isset($this->queryProfiles[$queryId])) {
+        if (null === $queryId || ! isset($this->queryProfiles[$queryId])) {
             throw new Db_Exception("Profiler has no query with handle '{$queryId}'.");
         }
 
